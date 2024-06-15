@@ -5,4 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Task_Manager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="720" Width="1280" Background="#FF252525"/>
+        Title="Task Manager" Height="720" MinHeight="400" Width="1000" MinWidth="400" Background="#202020" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="/6520110.png">
+    <Viewbox Stretch="UniformToFill">
+        <Canvas Width="1000" x:Name="LoginCanvas" RenderTransformOrigin="0.502,0.558">
+            <Border Width="600" Height="600" Canvas.Left="200" Canvas.Top="-326" HorizontalAlignment="Center" VerticalAlignment="Top"
+                Background="White" CornerRadius="30">
+                <Canvas>
+                    <Border Width="300" Height="300" Canvas.Left="150" 
+        Canvas.Top="25" HorizontalAlignment="Center" Padding="30" 
+        VerticalAlignment="Top" Background="#202020"
+        CornerRadius="30" >
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="25" Color="Black" 
+                   ShadowDepth="1"/>
+                        </Border.Effect>
+                        <Image Source="/6520110.png"/>
+                    </Border>
+                    <Border Width="400" Height="80" Canvas.Left="100" Canvas.Top="350" HorizontalAlignment="Left" VerticalAlignment="Top"
+         Padding="12" CornerRadius="25" >
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="20" Color="Black" 
+                ShadowDepth="0" RenderingBias="Performance" Direction="315" Opacity="0.4"/>
+                        </Border.Effect>
+                        <Border Background="White" CornerRadius="20">
+                            <Canvas>
+                                <TextBox Margin="10" BorderThickness="0" FontSize="26"
+                  MaxLength="20" x:Name="LoginTextBox" Width="350"/>
+                                <TextBox x:Name="placeholderTextLogin" Text="Nickname" FontSize="26"
+                      Margin="10" Opacity="0.5" BorderThickness="0"
+                      IsHitTestVisible="False" Width="350"/>
+                            </Canvas>
+                        </Border>
+                    </Border>
+                </Canvas>
+            </Border>
+        </Canvas>
+    </Viewbox>
+</Window>
