@@ -30,15 +30,31 @@
                         <Border Background="White" CornerRadius="20">
                             <Canvas>
                                 <TextBox Margin="10" BorderThickness="0" FontSize="26"
-                  MaxLength="20" x:Name="LoginTextBox" Width="350"/>
-                                <TextBox x:Name="placeholderTextLogin" Text="Nickname" FontSize="26"
-                      Margin="10" Opacity="0.5" BorderThickness="0"
-                      IsHitTestVisible="False" Width="350"/>
+                  MaxLength="20" x:Name="LoginTextBox" Width="350" TextChanged="LoginTextBox_TextChanged"/>
+                                <Label x:Name="placeholderTextLogin" FontSize="26" Opacity="0.5" BorderThickness="0"
+                      IsHitTestVisible="False" Width="130" HorizontalAlignment="Left" Canvas.Left="6" Canvas.Top="6" VerticalAlignment="Center">Nickname</Label>
                             </Canvas>
                         </Border>
                     </Border>
+
+                    <Border Width="400" Height="80" Canvas.Left="100" Canvas.Top="435" HorizontalAlignment="Center" VerticalAlignment="Top"
+Padding="12" CornerRadius="25" >
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="20" Color="Black" 
+       ShadowDepth="0" RenderingBias="Performance" Direction="315" Opacity="0.4"/>
+                        </Border.Effect>
+                        <Border Background="White" CornerRadius="20">
+                            <Canvas>
+                                <PasswordBox Margin="10" BorderThickness="0" FontSize="26"
+         MaxLength="20" x:Name="PasswordTextBox" Width="350"/>
+                                <Label x:Name="placeholderTextPassword" FontSize="26" Opacity="0.5" BorderThickness="0"
+             IsHitTestVisible="False" Width="120" HorizontalAlignment="Left" Canvas.Left="5" Canvas.Top="6" VerticalAlignment="Center">Password</Label>
+                            </Canvas>
+                        </Border>
+                    </Border>
+                    <Label Foreground="#959595" Content="by p-maxym" HorizontalAlignment="Left" Canvas.Left="242" Canvas.Top="559" VerticalAlignment="Top" FontSize="18" FontWeight="Medium" FontFamily="Cascadia Mono SemiBold" Background="White"/>
                 </Canvas>
             </Border>
         </Canvas>
-    </Viewbox>
+    </Viewbox>      
 </Window>

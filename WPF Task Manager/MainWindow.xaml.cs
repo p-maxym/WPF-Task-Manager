@@ -19,6 +19,21 @@ namespace WPF_Task_Manager
         public MainWindow()
         {
             InitializeComponent();
+            PasswordTextBox.PasswordChanged += new RoutedEventHandler(PasswordTextBox_PasswordChanged);
+        }
+
+        private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(LoginTextBox.Text))
+                placeholderTextLogin.Visibility = Visibility.Visible;
+            else placeholderTextLogin.Visibility = Visibility.Collapsed;
+        }
+
+        private void PasswordTextBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(PasswordTextBox.Password))
+                placeholderTextPassword.Visibility = Visibility.Visible;
+            else placeholderTextPassword.Visibility = Visibility.Collapsed;
         }
     }
 }
