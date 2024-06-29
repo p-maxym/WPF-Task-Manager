@@ -11,11 +11,12 @@ namespace WPF_Task_Manager
 {
     class DBConnection
     {
-        static string DBConnect = "server = localhost; user=root; password=Parolotmysql1@;" +
+        static readonly string DBConnect = "server=localhost;user=root;password=Parolotmysql1@;" +
             "database=taskmanagerdb";
         public static MySqlDataAdapter? msDataAdapter;
         static MySqlConnection? myConnect;
         static public MySqlCommand? msCommand;
+
 
         public static bool ConnectionDB()
         {
@@ -23,8 +24,7 @@ namespace WPF_Task_Manager
             {
                 myConnect = new MySqlConnection(DBConnect);
                 myConnect.Open();
-                msCommand = new MySqlCommand();
-                msCommand.Connection = myConnect;
+                msCommand = new MySqlCommand() {Connection = myConnect};
                 msDataAdapter = new MySqlDataAdapter(msCommand);
                 return true;
             }

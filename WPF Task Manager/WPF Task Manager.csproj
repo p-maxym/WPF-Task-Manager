@@ -11,14 +11,17 @@
 
   <ItemGroup>
     <None Remove="6520110.png" />
+    <None Remove="icons8-галочка.gif" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.4.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="6520110.png" />
+    <Resource Include="Images\6520110.png" />
+    <Resource Include="Images\icons8-галочка.gif" />
   </ItemGroup>
 
 </Project>
