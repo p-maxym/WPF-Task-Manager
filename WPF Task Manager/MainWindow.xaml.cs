@@ -19,7 +19,6 @@ namespace WPF_Task_Manager
 {
     public partial class MainWindow : Window
     {
-        static public string? _Login, _Password;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,15 +42,6 @@ namespace WPF_Task_Manager
             else placeholderTextPassword.Visibility = Visibility.Collapsed;
         }
 
-        static public void FieldsUpdate(TextBox loginTextBox, PasswordBox passwordTextBox)
-        {
-            _Login = loginTextBox.Text;
-            _Password = passwordTextBox.Password;
-        }
 
-        static public void TickImageUpdate(Image autorizationTickImage)
-        {
-            autorizationTickImage.Visibility = (autorizationTickImage.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
-        }
     }
 }

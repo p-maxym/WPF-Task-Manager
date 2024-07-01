@@ -65,28 +65,26 @@ namespace WPF_Task_Manager
 
             while (!isAvailable)
             {
-                MainWindow.FieldsUpdate(mainWindow.LoginTextBox, mainWindow.PasswordTextBox);
+                await Task.Delay(800);
 
-                string? login = MainWindow._Login;
-                string? password = MainWindow._Password;
+                _Name = mainWindow.LoginTextBox.Text;
+                _Password = mainWindow.PasswordTextBox.Password;
 
                 try
                 {
-                    if (login != null && password != null)
-                    {
-                        isAvailable = await AutorizationUserAsync(login, password, DBConnection.msCommand);
-                    }
+                    isAvailable = await AutorizationUserAsync(_Name, _Password, DBConnection.msCommand);
+
                     if (isAvailable)
                     {
-                        MainWindow.TickImageUpdate(mainWindow.AutorizationTickImage);
-                        await Task.Delay(1200);
-                        MainWindow.TickImageUpdate(mainWindow.AutorizationTickImage);
+                        mainWindow.AutorizationTickImage.Visibility = Visibility.Visible;
+                        await Task.Delay(1500);
+                        mainWindow.AutorizationTickImage.Visibility = Visibility.Collapsed;
+                        
                     }
-                    else await Task.Delay(600);
                 }
                 catch (TaskCanceledException)
                 {
-                    Debug.WriteLine($"Failed to login: {MainWindow._Login}");
+                    Debug.WriteLine($"Failed to login: {_Name}");
                     return;
                 }
             }
