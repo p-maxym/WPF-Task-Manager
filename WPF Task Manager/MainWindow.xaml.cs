@@ -26,7 +26,7 @@ namespace WPF_Task_Manager
             DBConnection.ConnectionDB();
             LoginTextBox.Text = "xD";
             PasswordTextBox.Focus();
-            Autorization.AutorizationCheck(this);
+            Autorization.LoginCheck(this);
         }
 
         private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -49,7 +49,9 @@ namespace WPF_Task_Manager
             _Password = passwordTextBox.Password;
         }
 
-        static public void TickImageUpdate(Image autorizationTickImage) =>
-            autorizationTickImage.Visibility = (autorizationTickImage.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+        static public void TickImageUpdate(Image autorizationTickImage)
+        {
+            autorizationTickImage.Visibility = (autorizationTickImage.Visibility == Visibility.Visible) ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 }

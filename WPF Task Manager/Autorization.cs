@@ -45,7 +45,7 @@ namespace WPF_Task_Manager
             }
         }
 
-        static public async void AutorizationCheck(MainWindow mainWindow)
+        static public async void LoginCheck(MainWindow mainWindow)
         {
             if (_ctoken != null)
             {
