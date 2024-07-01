@@ -1,6 +1,8 @@
 ﻿using MySql.Data.MySqlClient;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,13 +19,14 @@ namespace WPF_Task_Manager
 {
     public partial class MainWindow : Window
     {
-        private CancellationTokenSource? _ctoken;
-        private bool isAvailable = false;
+        static public string? _Login, _Password;
         public MainWindow()
         {
             InitializeComponent();
             DBConnection.ConnectionDB();
-            LoginInTaskManager();
+            LoginTextBox.Text = "xD";
+            PasswordTextBox.Focus();
+            Autorization.AutorizationCheck(this);
         }
 
         private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -40,44 +43,13 @@ namespace WPF_Task_Manager
             else placeholderTextPassword.Visibility = Visibility.Collapsed;
         }
 
-        private async void LoginInTaskManager()
+        static public void FieldsUpdate(TextBox loginTextBox, PasswordBox passwordTextBox)
         {
-            if (_ctoken != null)
-            {
-                _ctoken.Cancel();
-                _ctoken.Dispose();
-            }
-
-            if (DBConnection.msCommand == null)
-            {
-                Debug.WriteLine("Database command cannot be null!");
-                return;
-            }
-
-            _ctoken = new CancellationTokenSource();
-            var token = _ctoken.Token;
-
-            while (!isAvailable)
-            {
-                string login = LoginTextBox.Text;
-                string password = PasswordTextBox.Password;
-                try
-                {
-                    isAvailable = await Autorization.AutorizationUserAsync(login, password, DBConnection.msCommand);
-
-                    if (isAvailable)
-                    {
-                        AutorizationTickImage.Visibility = Visibility.Visible;
-                        /// MessageBox.Show($"Welcome, {Autorization._Name}");
-                    }
-                    else await Task.Delay(600);
-                }
-                catch (TaskCanceledException)
-                {
-                    Debug.WriteLine($"Failed to login: {login}");
-                    return;
-                }
-            }            
+            _Login = loginTextBox.Text;
+            _Password = passwordTextBox.Password;
         }
+
+        static public void TickImageUpdate(Image autorizationTickImage) =>
+            autorizationTickImage.Visibility = (autorizationTickImage.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
     }
 }

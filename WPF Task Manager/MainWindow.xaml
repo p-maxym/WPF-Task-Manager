@@ -8,7 +8,7 @@
         xmlns:wpfAnimatedGif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
         Title="Task Manager" Height="720" MinHeight="400" Width="1000" MinWidth="400" Background="#202020" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Images/6520110.png">
     <Viewbox Stretch="Uniform">
-        <Grid Width="1000" Height="720">
+        <Grid Width="1000" Height="720" x:Name="AutorizationWindow">
             <Border Width="600" Height="600" HorizontalAlignment="Center" VerticalAlignment="Top"
                     Background="White" CornerRadius="30" Margin="0,40,0,0">
                 <Grid>
@@ -54,5 +54,6 @@
                 </Grid>
             </Border>
         </Grid>
+        
     </Viewbox>
 </Window>
