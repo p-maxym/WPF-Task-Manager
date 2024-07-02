@@ -17,6 +17,7 @@ namespace WPF_Task_Manager
             LoginTextBox.Text = "xD";
             PasswordTextBox.Focus();
             Autorization.LoginCheck(this);
+            
         }
 
         private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
