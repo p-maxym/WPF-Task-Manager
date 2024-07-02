@@ -16,11 +16,7 @@ namespace WPF_Task_Manager
 
         static private async Task<bool> AutorizationUserAsync(string login, string password, MySqlCommand msCommand)
         {
-            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password))
-            {
-                Debug.WriteLine("Login and password cannot be empty!");
-                return false;
-            }
+            if (string.IsNullOrEmpty(login) || string.IsNullOrEmpty(password)) return false;
             try
             {
                 msCommand.CommandText = "SELECT * FROM users WHERE username = @username AND password = @password";
@@ -45,7 +41,7 @@ namespace WPF_Task_Manager
             }
         }
 
-        static public async void LoginCheck(MainWindow mainWindow)
+        static public async void LoginCheck(AutorizationPanel auPanel)
         {
             if (_ctoken != null)
             {
@@ -65,10 +61,10 @@ namespace WPF_Task_Manager
 
             while (!isAvailable)
             {
-                await Task.Delay(800);
+                await Task.Delay(750);
 
-                _Name = mainWindow.LoginTextBox.Text;
-                _Password = mainWindow.PasswordTextBox.Password;
+                _Name = auPanel.LoginTextBox.Text;
+                _Password = auPanel.PasswordTextBox.Password;
 
                 try
                 {
@@ -76,10 +72,10 @@ namespace WPF_Task_Manager
 
                     if (isAvailable)
                     {
-                        mainWindow.AutorizationTickImage.Visibility = Visibility.Visible;
+                        auPanel.AutorizationTickImage.Visibility = Visibility.Visible;
                         await Task.Delay(1500);
-                        mainWindow.AutorizationTickImage.Visibility = Visibility.Collapsed;
-                        
+                        auPanel.AutorizationTickImage.Visibility = Visibility.Collapsed;
+                        auPanel.AutorizationWindow.Visibility = Visibility.Collapsed;
                     }
                 }
                 catch (TaskCanceledException)
