@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:WPF_Task_Manager"
              mc:Ignorable="d"
              >
-    <Grid Width="1000" Height="720" x:Name="AutorizationWindow" Background="#222222">
+    <Grid Width="1000" Height="680" x:Name="AutorizationWindow" Background="#222222">
         <Border Width="600" Height="600" HorizontalAlignment="Center" VerticalAlignment="Top"
         Background="White" CornerRadius="30" Margin="0,40,0,0">
             <Grid>
