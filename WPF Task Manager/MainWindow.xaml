@@ -14,10 +14,30 @@
 
 
     <Grid>
+        <Border x:Name="WindowNameBorder">
         <DockPanel>
-            <Border Background="Black" DockPanel.Dock="Top"
-                        Height="32" VerticalAlignment="Top"/>
+            <Border Background="#222222" DockPanel.Dock="Top"
+                        Height="32" VerticalAlignment="Top">
+                <DockPanel>
+                    <StackPanel Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True" DockPanel.Dock="Right" Width="250" Height="32" FlowDirection="RightToLeft" VerticalAlignment="Top" HorizontalAlignment="Right">
+                            <Border x:Name="closeButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown"  MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Label Content="✕" HorizontalAlignment="Center" Margin="0,1,0,0"  FontSize="14" FontFamily="Arial" Foreground="White"/>
+                            </Border>
+                            <Border x:Name="maxMinButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Label Name="labelMaxmin" Content="&#9744;" HorizontalAlignment="Center" Margin="0,-1,0,0"  FontSize="14" Foreground="White" />
+                            </Border>
+                            <Border x:Name="rollButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Label Content="&#8211;" HorizontalAlignment="Center" Margin="0,-4,0,0"  FontSize="16" Foreground="White" />
+                            </Border>
+                        </StackPanel>
+                    <Border Width="15" Height="15" Margin="10,0,0,0">
+                        <Image Source="Images/6520110.png"/>
+                    </Border>
+                    <Label Content="Task Manager" HorizontalAlignment="Left" FontSize="14" Foreground="White"/>
+                </DockPanel>
+            </Border>
         </DockPanel>
+        </Border>
         <Viewbox Stretch="Fill" Margin="0, 25, 0, 0">
             <Grid>
                 <local:AutorizationPanel Visibility="Collapsed"/>
