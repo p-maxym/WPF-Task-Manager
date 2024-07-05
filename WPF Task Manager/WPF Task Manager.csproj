@@ -12,6 +12,9 @@
   <ItemGroup>
     <None Remove="6520110.png" />
     <None Remove="icons8-галочка.gif" />
+    <None Remove="Resource\circle.png" />
+    <None Remove="Resource\free-icon-verify-83.png" />
+    <None Remove="Resource\plus.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\6520110.png" />
-    <Resource Include="Images\icons8-галочка.gif" />
+    <Resource Include="Resource\circle.png" />
+    <Resource Include="Resource\free-icon-verify-83.png">
+      <CopyToOutputDirectory></CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\icons8-галочка.gif" />
+    <Resource Include="Resource\plus.png" />
   </ItemGroup>
 
 </Project>

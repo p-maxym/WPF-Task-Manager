@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WPF_Task_Manager"
         xmlns:wpfAnimatedGif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
         mc:Ignorable="d"
-        Title="Task Manager" Height="760" MinHeight="400" Width="1000" MinWidth="400" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Images/6520110.png"
+        Title="Task Manager" Height="760" MinHeight="400" Width="1000" MinWidth="400" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
         >
     <WindowChrome.WindowChrome>
         <WindowChrome/>
@@ -31,14 +31,14 @@
                             </Border>
                         </StackPanel>
                     <Border Width="15" Height="15" Margin="10,0,0,0">
-                        <Image Source="Images/6520110.png"/>
+                            <Image Source="Resource/free-icon-verify-83.png"/>
                     </Border>
                     <Label Content="Task Manager" HorizontalAlignment="Left" FontSize="14" Foreground="White"/>
                 </DockPanel>
             </Border>
         </DockPanel>
         </Border>
-        <Viewbox Stretch="Fill" Margin="0, 25, 0, 0">
+        <Viewbox Stretch="Uniform" Margin="0, 25, 0, 0">
             <Grid>
                 <local:AutorizationPanel Visibility="Collapsed"/>
                 <Border Width="1020" Height="720">

@@ -16,7 +16,7 @@
                     <Border.Effect>
                         <DropShadowEffect BlurRadius="25" Color="Black" ShadowDepth="1"/>
                     </Border.Effect>
-                    <Image Source="Images/6520110.png"/>
+                    <Image Source="Resource/free-icon-verify-83.png" />
                 </Border>
                 <Border Width="400" Height="80" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,350,0,0"
                 Padding="12" CornerRadius="25">
@@ -46,7 +46,7 @@
                 </Border>
 
                 <Border>
-                    <Image wpfAnimatedGif:ImageBehavior.AnimatedSource="Images/icons8-галочка.gif" Margin="247,516,247,31" RenderTransformOrigin="0.49,0.49" Visibility="Collapsed" x:Name="AutorizationTickImage"/>
+                    <Image wpfAnimatedGif:ImageBehavior.AnimatedSource="Resource/icons8-галочка.gif" Margin="247,516,247,31" RenderTransformOrigin="0.49,0.49" Visibility="Collapsed" x:Name="AutorizationTickImage"/>
                 </Border>
 
                 <Label Foreground="#959595" Content="by p-maxym" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="18" FontWeight="Medium" FontFamily="Cascadia Mono SemiBold"/>

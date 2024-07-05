@@ -6,10 +6,14 @@
              xmlns:local="clr-namespace:WPF_Task_Manager"
              mc:Ignorable="d"
              >
+    <Border Width="600" Height="670" Margin="399,25,21,25" Background="#171717"
+                CornerRadius="20" x:Name="TaskPanelBorder">
         <Grid>
-            <Border Width="600" Height="670" Margin="399,25,21,25" Background="#171717"
-                CornerRadius="20">
-
-            </Border>
+            <Border Width="550" Height="60" Margin="25,591,25,19" Background="#343434" CornerRadius="20"/>
+            <TextBox Margin="82,606,44,32" Background="#343434" BorderThickness="0"/>
+            <Label Content="Try typing 'I need to feed dog'" Margin="82,606,292,32" Foreground="#5271FF" FontSize="15" FontWeight="Bold"/>
+            <Image x:Name="plusImage" Source="Resource/circle.png" Margin="33,603,525,29"/>
+            <Image Source="Resource/plus.png" Margin="41,605,533,31" />
         </Grid>
-</UserControl>
+    </Border>
+</UserControl>  
