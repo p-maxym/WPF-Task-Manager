@@ -100,5 +100,6 @@ namespace WPF_Task_Manager
             else
                 WindowState = WindowState.Minimized;
         }
+
     }
 }
