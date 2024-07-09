@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -101,5 +102,22 @@ namespace WPF_Task_Manager
                 WindowState = WindowState.Minimized;
         }
 
+        private bool plus = false;
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            double newWidth = MainWindowGrid.ActualWidth - 420;
+            double newHeight = MainWindowGrid.ActualHeight - 65;
+            if (taskPanel != null)
+            { 
+                if (!plus)
+                {
+                    newWidth += 15;
+                    newHeight += 40;
+                    plus = true;
+                }
+                taskPanel.TaskPanelResize(newWidth, newHeight);
+            }
+        }
     }
 }

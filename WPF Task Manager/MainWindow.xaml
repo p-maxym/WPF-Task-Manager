@@ -1,4 +1,4 @@
-﻿<Window x:Class="WPF_Task_Manager.MainWindow"
+﻿ <Window x:Class="WPF_Task_Manager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:WPF_Task_Manager"
         xmlns:wpfAnimatedGif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
         mc:Ignorable="d"
-        Title="Task Manager" MinHeight="400" MinWidth="400" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
-        
+        Title="Task Manager" MinHeight="400" Width="1020" Height="750" MinWidth="400" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
+        SizeChanged="MainWindow_SizeChanged"
         >
     <WindowChrome.WindowChrome>
         <WindowChrome/>
@@ -39,17 +39,17 @@
             </Border>
         </DockPanel>
         </Border>
-        <Viewbox Stretch="Fill" Margin="0, 25, 0, 0">
-            <Grid>
+        <Canvas Margin="0, 25, 0, 0">
+            <DockPanel>
                 <local:AutorizationPanel Visibility="Collapsed"/>
-                <Border Width="1020" Height="720">
+                <Border>
                     <Grid x:Name="PanelsContainer" Visibility="Visible">
-                        <local:TaskPanel x:Name="taskPanel"/>
                         <local:TaskSectionPanel/>
                         <local:ProfilePanel/>
+                        <local:TaskPanel x:Name="taskPanel"/>
                     </Grid>
                 </Border>
-            </Grid>
-        </Viewbox>
+            </DockPanel>
+        </Canvas>
     </Grid>
 </Window>

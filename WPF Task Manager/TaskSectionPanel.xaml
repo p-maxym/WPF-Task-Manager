@@ -6,8 +6,10 @@
              xmlns:local="clr-namespace:WPF_Task_Manager"
              mc:Ignorable="d"
              >
-    <Border Width="350" Height="500" Margin="21,195,649,25" Background="#171717"
-                CornerRadius="20">
+    <Canvas>
+    <Border Width="350" Height="500" Background="#171717"
+                CornerRadius="20" Margin="21,195,649,25">
 
     </Border>
+    </Canvas>
 </UserControl>
