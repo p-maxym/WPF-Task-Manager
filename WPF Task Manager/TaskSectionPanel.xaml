@@ -8,8 +8,8 @@
              >
     <Canvas>
     <Border Width="350" Height="500" Background="#171717"
-                CornerRadius="20" Margin="21,195,649,25">
-
+                CornerRadius="20" Margin="21,195,649,25" x:Name="TaskSectionBorder">
+        
     </Border>
     </Canvas>
 </UserControl>

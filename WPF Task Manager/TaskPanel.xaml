@@ -7,12 +7,13 @@
              mc:Ignorable="d"
              >
     <Grid>
-        <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder" HorizontalAlignment="Right" Margin="399,10,21,25">
+        <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
+            <!-- Margin="399, 10, 21, 25" -->
             <Grid>
                 <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60">
-                    <Border Width="550" Height="60" Background="#343434" CornerRadius="20" Canvas.Left="0" Canvas.Top="0"/>
-                    <TextBox Width="473" Background="#343434" BorderThickness="0" Canvas.Left="56" Canvas.Top="14" HorizontalAlignment="Left" Height="30" VerticalAlignment="Center"/>
-                    <Label Content="Try typing 'I need to feed dog'" Foreground="#5271FF" FontSize="15" FontWeight="Bold" Canvas.Left="56" Canvas.Top="14"/>
+                    <Border Width="550" Height="60" Background="#343434" CornerRadius="20" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder"/>
+                    <TextBox Width="473" Background="#343434" BorderThickness="0" Canvas.Left="56" FontSize="17" Foreground="#5271FF" Canvas.Top="19" FontWeight="Bold" HorizontalAlignment="Center" Height="23" x:Name="TaskBox" VerticalAlignment="Center"/>
+                    <Label Content="Try typing 'I need to feed dog'" Foreground="#5271FF" FontSize="17" FontWeight="Bold" Canvas.Left="56" Canvas.Top="14"/>
                     <Image x:Name="plusImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <Image Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                 </Canvas>

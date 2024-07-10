@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              >
     <Canvas>
-    <Border Width="350" Height="150" Background="#171717"
+    <Border Width="350" Height="160" Background="#171717"
                 CornerRadius="20" Margin="21,11,647,531">
 
     </Border>

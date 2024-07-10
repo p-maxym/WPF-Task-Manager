@@ -21,5 +21,11 @@ namespace WPF_Task_Manager
             TaskPanelBorder.Width = newWidth;
             TaskPanelBorder.Height = newHeight;
         }
+
+        public void TaskPanelContentResize(double newWidthBorder, double newWidthBox)
+        {
+            TaskBorder.Width = newWidthBorder;
+            TaskBox.Width = newWidthBox;
+        }
     }
 }

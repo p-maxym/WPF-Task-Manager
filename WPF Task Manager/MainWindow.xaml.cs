@@ -107,17 +107,31 @@ namespace WPF_Task_Manager
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double newWidth = MainWindowGrid.ActualWidth - 420;
-            double newHeight = MainWindowGrid.ActualHeight - 65;
-            if (taskPanel != null)
-            { 
+            double newHeight = MainWindowGrid.ActualHeight - 55;
                 if (!plus)
                 {
                     newWidth += 15;
                     newHeight += 40;
                     plus = true;
                 }
-                taskPanel.TaskPanelResize(newWidth, newHeight);
-            }
+
+                if (MainWindowGrid.ActualWidth <= 750)
+                {
+                    taskSectionPanel.Visibility = Visibility.Collapsed;
+                    profilePanel.Visibility = Visibility.Collapsed;
+                    taskPanel.Margin = new Thickness(25,10,21,25);
+                    taskPanel.TaskPanelResize(newWidth + 370, newHeight);
+                    taskPanel.TaskPanelContentResize(newWidth + 330, newWidth + 255);
+                }
+                else
+                {
+                    taskSectionPanel.Visibility = Visibility.Visible;
+                    profilePanel.Visibility = Visibility.Visible;
+                    taskPanel.Margin = new Thickness(399, 10, 21, 25);
+                    taskPanel.TaskPanelResize(newWidth, newHeight);
+                    taskPanel.TaskPanelContentResize(newWidth - 50, newWidth - 122);
+                    taskSectionPanel.TaskSectionPanelResize(newHeight - 185);
+                }
         }
     }
 }

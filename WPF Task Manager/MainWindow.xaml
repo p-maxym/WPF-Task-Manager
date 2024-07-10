@@ -44,8 +44,8 @@
                 <local:AutorizationPanel Visibility="Collapsed"/>
                 <Border>
                     <Grid x:Name="PanelsContainer" Visibility="Visible">
-                        <local:TaskSectionPanel/>
-                        <local:ProfilePanel/>
+                        <local:TaskSectionPanel x:Name="taskSectionPanel"/>
+                        <local:ProfilePanel x:Name="profilePanel"/>
                         <local:TaskPanel x:Name="taskPanel"/>
                     </Grid>
                 </Border>
