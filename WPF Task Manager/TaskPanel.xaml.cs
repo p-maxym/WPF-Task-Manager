@@ -22,10 +22,16 @@ namespace WPF_Task_Manager
             TaskPanelBorder.Height = newHeight;
         }
 
-        public void TaskPanelContentResize(double newWidthBorder, double newWidthBox)
+        public void TaskPanelContentResize(double newWidthBorder, double newWidthBox, double calendarPositionX, double calendarPositionY)
         {
             TaskBorder.Width = newWidthBorder;
             TaskBox.Width = newWidthBox;
+
+            if (calendarImage.Visibility == Visibility.Visible)
+            {
+                Canvas.SetLeft(calendarImage, calendarPositionX);
+                Canvas.SetTop(calendarImage, calendarPositionY);
+            }
         }
     }
 }

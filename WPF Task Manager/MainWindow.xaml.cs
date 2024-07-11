@@ -115,13 +115,13 @@ namespace WPF_Task_Manager
                     plus = true;
                 }
 
-                if (MainWindowGrid.ActualWidth <= 750)
+                if (MainWindowGrid.ActualWidth <= 780)
                 {
                     taskSectionPanel.Visibility = Visibility.Collapsed;
                     profilePanel.Visibility = Visibility.Collapsed;
                     taskPanel.Margin = new Thickness(25,10,21,25);
                     taskPanel.TaskPanelResize(newWidth + 370, newHeight);
-                    taskPanel.TaskPanelContentResize(newWidth + 330, newWidth + 255);
+                    taskPanel.TaskPanelContentResize(newWidth + 320, newWidth + 245, (newWidth / 2) + 40, (newHeight / 2) - (newHeight + 35));
                 }
                 else
                 {
@@ -129,7 +129,7 @@ namespace WPF_Task_Manager
                     profilePanel.Visibility = Visibility.Visible;
                     taskPanel.Margin = new Thickness(399, 10, 21, 25);
                     taskPanel.TaskPanelResize(newWidth, newHeight);
-                    taskPanel.TaskPanelContentResize(newWidth - 50, newWidth - 122);
+                    taskPanel.TaskPanelContentResize(newWidth - 50, newWidth - 122, (newWidth / 2) - 140, (newHeight / 2) - (newHeight + 35));
                     taskSectionPanel.TaskSectionPanelResize(newHeight - 185);
                 }
         }
