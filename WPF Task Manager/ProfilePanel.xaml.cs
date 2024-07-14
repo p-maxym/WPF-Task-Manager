@@ -13,5 +13,11 @@ namespace WPF_Task_Manager
         {
             InitializeComponent();
         }
+
+        public void ProfilePanelVisible(double actualWidth)
+        {
+            if (actualWidth <= 360) ProfilePanelBorder.Visibility = System.Windows.Visibility.Collapsed;
+            else ProfilePanelBorder.Visibility = System.Windows.Visibility.Visible;
+        }
     }
 }

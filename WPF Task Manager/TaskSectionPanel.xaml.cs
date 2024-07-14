@@ -14,9 +14,17 @@ namespace WPF_Task_Manager
             InitializeComponent();
         }
 
-        public void TaskSectionPanelResize(double newHeight)
+        public void TaskSectionPanelResize(double actualWidth, double actualHeight)
         {
-            TaskSectionBorder.Height = newHeight;
+            if (actualWidth <= 360)
+            {
+                TaskSectionBorder.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                TaskSectionBorder.Height = actualHeight - 185;
+                TaskSectionBorder.Visibility = System.Windows.Visibility.Visible;
+            }
         }
     }
 }
