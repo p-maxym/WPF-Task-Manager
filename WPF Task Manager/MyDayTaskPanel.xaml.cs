@@ -13,9 +13,9 @@ using System.Windows.Media;
 
 namespace WPF_Task_Manager
 {
-    partial class TaskPanel : UserControl
+    partial class MyDayTaskPanel : UserControl
     {
-        public TaskPanel()
+        public MyDayTaskPanel()
         {
             InitializeComponent();
 
@@ -41,13 +41,15 @@ namespace WPF_Task_Manager
                 // Border content resize
                 TaskPanelBorder.Margin = new Thickness(25, 10, 21, 25);
                 TaskBorder.Width = actualWidth + 320;
-                TaskBox.Width = actualWidth + 245;
+                TaskBox.Width = actualWidth + 285;
 
                 // Calendar image
                 if (calendarImage.Visibility == Visibility.Visible)
                 {
                     Canvas.SetLeft(calendarImage, (actualWidth / 2) + 30);
                     Canvas.SetTop(calendarImage, (actualHeight / 2) - (actualHeight + 70));
+                    Canvas.SetLeft(focusOnYourDay, (actualWidth / 2) + 75);
+                    Canvas.SetTop(focusOnYourDay, (actualHeight / 2) - (actualHeight - 100));
                 }
 
                 //Data Label
@@ -67,13 +69,15 @@ namespace WPF_Task_Manager
                 // Border content resize
                 TaskPanelBorder.Margin = new Thickness(397, 10, 21, 25);
                 TaskBorder.Width = actualWidth - 50;
-                TaskBox.Width = actualWidth - 122;
+                TaskBox.Width = actualWidth - 85;
 
-                // Calendar image
+                // Calendar image + focus on day label
                 if (calendarImage.Visibility == Visibility.Visible)
                 {
                     Canvas.SetLeft(calendarImage, (actualWidth / 2) - 150);
                     Canvas.SetTop(calendarImage, (actualHeight / 2) - (actualHeight + 70));
+                    Canvas.SetLeft(focusOnYourDay, (actualWidth / 2) - 105);
+                    Canvas.SetTop(focusOnYourDay, (actualHeight / 2) - (actualHeight - 105));
                 }
 
                 //Data Label
@@ -90,24 +94,14 @@ namespace WPF_Task_Manager
             TaskBorder.Background = new BrushConverter().ConvertFromString("#504F4F") as Brush;
             TaskBox.Background = new BrushConverter().ConvertFromString("#504F4F") as Brush;
         }
-
         private void TaskBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             TaskBorder.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
             TaskBox.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
         }
 
-        private void TextBox_MouseEnter(object sender, MouseEventArgs e)
-        {
-            TaskBorder.Background = new BrushConverter().ConvertFromString("#504F4F") as Brush;
-            TaskBox.Background = new BrushConverter().ConvertFromString("#504F4F") as Brush;
-        }
-
-        private void TextBox_MouseLeave(object sender, MouseEventArgs e)
-        {
-            TaskBorder.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
-            TaskBox.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
-        }
+        private void TextBox_MouseEnter(object sender, MouseEventArgs e) => TaskBorder_MouseEnter(sender, e);
+        private void TextBox_MouseLeave(object sender, MouseEventArgs e) => TaskBorder_MouseLeave(sender, e);
 
         private void TaskBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -116,10 +110,8 @@ namespace WPF_Task_Manager
                 addTaskLabel.Visibility = Visibility.Collapsed;
                 plusImage.Visibility = Visibility.Collapsed;
             }
-            else
-            {
-                addTaskLabel.Visibility = Visibility.Visible;
-            }
+
+            else addTaskLabel.Visibility = Visibility.Visible;
         }
 
         private void TaskBox_LostFocus(object sender, RoutedEventArgs e)

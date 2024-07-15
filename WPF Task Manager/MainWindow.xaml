@@ -39,14 +39,17 @@
             </Border>
         </DockPanel>
         </Border>
+        <Viewbox Stretch="Uniform">
+            <local:AutorizationPanel Visibility="Collapsed"/>
+        </Viewbox>
         <Canvas Margin="0, 25, 0, 0">
             <DockPanel>
-                <local:AutorizationPanel Visibility="Collapsed"/>
+                
                 <Border>
                     <Grid x:Name="PanelsContainer" Visibility="Visible">
                         <local:TaskSectionPanel x:Name="taskSectionPanel"/>
                         <local:ProfilePanel x:Name="profilePanel"/>
-                        <local:TaskPanel x:Name="taskPanel"/>
+                        <local:MyDayTaskPanel x:Name="taskPanel"/>
                     </Grid>
                 </Border>
             </DockPanel>

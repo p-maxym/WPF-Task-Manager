@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="WPF_Task_Manager.TaskPanel"
+﻿<UserControl x:Class="WPF_Task_Manager.MyDayTaskPanel"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -17,12 +17,13 @@
                              MouseEnter="TextBox_MouseEnter" MouseLeave="TextBox_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged"/>
                     <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
 
-                    <Image x:Name="circleImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="True"/>
-                    <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" PreviewMouseDown="plusImage_PreviewMouseDown"/>
+                    <Image x:Name="circleImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
+                    <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" PreviewMouseDown="plusImage_PreviewMouseDown" IsHitTestVisible="False"/>
                     <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
 
                     <Label x:Name="myDay" Content="My Day" FontSize="30" Foreground="#5271FF" FontWeight="Bold"/>
                     <Label x:Name="currentData" Content="Now, now 00" FontSize="15" Foreground="#5271FF" FontWeight="Bold"/>
+                    <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
                 </Canvas>
             </Grid>
         </Border>

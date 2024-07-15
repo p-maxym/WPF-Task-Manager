@@ -50,12 +50,9 @@ namespace WPF_Task_Manager
         {
             Border? border = sender as Border;
             if (border == null) return;
-            if (border.Name == "closeButton")
-                border.Background = Brushes.Red;
-            else
-            {
-                border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
-            }
+            if (border.Name == "closeButton") border.Background = Brushes.Red;
+               
+            else border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
         }
 
         // handles: mouse leaves the button
@@ -89,17 +86,16 @@ namespace WPF_Task_Manager
         {
             Border? border = sender as Border;
             if (border == null) return;
-            if (border.Name == "closeButton")
-                Close();
+            if (border.Name == "closeButton") Close();
+
             else if ((border.Name == "maxMinButton"))
             {
                 if (WindowState == WindowState.Maximized)
                     WindowState = WindowState.Normal;
-                else
-                    WindowState = WindowState.Maximized;
+                else WindowState = WindowState.Maximized;       
             }
-            else
-                WindowState = WindowState.Minimized;
+
+            else WindowState = WindowState.Minimized;
         }
 
         private void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)

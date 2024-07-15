@@ -25,7 +25,7 @@
                         <Grid>
                             <TextBox Margin="10" BorderThickness="0" FontSize="26" MaxLength="20" x:Name="LoginTextBox" Width="350" TextChanged="LoginTextBox_TextChanged"/>
                             <Label x:Name="placeholderTextLogin" FontSize="26" Opacity="0.5" BorderThickness="0"
-                               IsHitTestVisible="False" Width="130" HorizontalAlignment="Left" Margin="10,5,0,10" Content="Nickname"/> 
+                               IsHitTestVisible="False" Width="130" HorizontalAlignment="Left" Margin="10,5,0,10" Content="Nickname"/>
                         </Grid>
                     </Border>
                 </Border>
