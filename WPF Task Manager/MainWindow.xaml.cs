@@ -102,6 +102,11 @@ namespace WPF_Task_Manager
                 WindowState = WindowState.Minimized;
         }
 
+        private void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (taskPanel.TaskBox.IsFocused) taskPanel.HiddenFocusElement.Focus();
+        }
+
         private bool plus = false;
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -114,7 +119,6 @@ namespace WPF_Task_Manager
                 actualHeight += 40;
                 plus = true;
             }
-
             taskPanel.TaskPanelContentResize(actualWidth, actualHeight);
             taskSectionPanel.TaskSectionPanelResize(actualWidth, actualHeight);
             profilePanel.ProfilePanelVisible(actualWidth);

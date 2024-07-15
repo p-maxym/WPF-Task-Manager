@@ -109,14 +109,9 @@ namespace WPF_Task_Manager
             TaskBox.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
         }
 
-        private void TaskPanelBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        private void TaskBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (TaskBox.IsFocused) HiddenFocusElement.Focus();
-        }
-
-        private void TaskBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (!string.IsNullOrEmpty(TaskBox.Text))
+            if (!string.IsNullOrEmpty(TaskBox.Text)) 
             {
                 addTaskLabel.Visibility = Visibility.Collapsed;
                 plusImage.Visibility = Visibility.Collapsed;
@@ -124,14 +119,32 @@ namespace WPF_Task_Manager
             else
             {
                 addTaskLabel.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void TaskBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(TaskBox.Text))
+            {
+                addTaskLabel.Content = "Add a task";
+                addTaskLabel.Opacity = 1;
+                addTaskLabel.Visibility = Visibility.Visible;
                 plusImage.Visibility = Visibility.Visible;
             }
         }
 
         private void TaskBox_GotFocus(object sender, RoutedEventArgs e)
         {
-            addTaskLabel.Visibility = Visibility.Collapsed;
+            
+            addTaskLabel.Content = "Try typing 'I need to feed the dog'";
+            addTaskLabel.Opacity = 0.6;
             plusImage.Visibility = Visibility.Collapsed;
+        }
+
+        private void plusImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TaskBox.Dispatcher.BeginInvoke(new Action(() => { TaskBox.Focus();}));
+            TaskBox_GotFocus(TaskBox, new RoutedEventArgs());
         }
     }
 }
