@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WPF_Task_Manager"
         xmlns:wpfAnimatedGif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
         mc:Ignorable="d"
-        Title="Task Manager" MinHeight="500" Width="1020" Height="750" MinWidth="430" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
+        Title="Task Manager" MinHeight="500" Width="1020" Height="750" MinWidth="460" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
         SizeChanged="MainWindow_SizeChanged" MouseDown="FocusReset_MouseDown"
         >
     <WindowChrome.WindowChrome>
@@ -49,7 +49,7 @@
                     <Grid x:Name="PanelsContainer" Visibility="Visible">
                         <local:TaskSectionPanel x:Name="taskSectionPanel"/>
                         <local:ProfilePanel x:Name="profilePanel"/>
-                        <local:MyDayTaskPanel x:Name="taskPanel"/>
+                        <local:MyDayTaskPanel x:Name="myDayTaskPanel"/>
                     </Grid>
                 </Border>
             </DockPanel>

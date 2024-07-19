@@ -12,6 +12,9 @@
   <ItemGroup>
     <None Remove="6520110.png" />
     <None Remove="icons8-галочка.gif" />
+    <None Remove="Resource\arrow-purple-blue.png" />
+    <None Remove="Resource\arrow-purple_denoiser.png" />
+    <None Remove="Resource\arrow.png" />
     <None Remove="Resource\circle.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
     <None Remove="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" />
@@ -24,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\arrow-purple-blue.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\circle.png" />
     <Resource Include="Resource\free-icon-verify-83.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>

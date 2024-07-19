@@ -90,8 +90,8 @@ namespace WPF_Task_Manager
 
             else if ((border.Name == "maxMinButton"))
             {
-                if (WindowState == WindowState.Maximized)
-                    WindowState = WindowState.Normal;
+                if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
+                    
                 else WindowState = WindowState.Maximized;       
             }
 
@@ -100,22 +100,18 @@ namespace WPF_Task_Manager
 
         private void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (taskPanel.TaskBox.IsFocused) taskPanel.HiddenFocusElement.Focus();
+            if (myDayTaskPanel.TaskBox.IsFocused) myDayTaskPanel.HiddenFocusElement.Focus();
         }
 
         private bool plus = false;
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            double actualWidth = MainWindowGrid.ActualWidth - 420;
-            double actualHeight = MainWindowGrid.ActualHeight - 55;
-            if (!plus)
-            {
-                actualWidth += 15;
-                actualHeight += 40;
-                plus = true;
-            }
-            taskPanel.TaskPanelContentResize(actualWidth, actualHeight);
+            double actualWidth = MainWindowGrid.ActualWidth - (!plus ? 405 : 420);
+            double actualHeight = MainWindowGrid.ActualHeight - (!plus ? 15 : 55);
+            plus = true;
+
+            myDayTaskPanel.TaskPanelContentResize(actualWidth, actualHeight);
             taskSectionPanel.TaskSectionPanelResize(actualWidth, actualHeight);
             profilePanel.ProfilePanelVisible(actualWidth);
         }
