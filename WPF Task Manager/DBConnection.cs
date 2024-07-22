@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Microsoft.VisualBasic;
 using MySql.Data.MySqlClient;
 
 namespace WPF_Task_Manager
@@ -26,6 +29,7 @@ namespace WPF_Task_Manager
                 myConnect.Open();
                 msCommand = new MySqlCommand() {Connection = myConnect};
                 msDataAdapter = new MySqlDataAdapter(msCommand);
+                Debug.WriteLine("CONNECTED TO DATABASE SUCCESSFULLY.");
                 return true;
             }
             catch
@@ -40,7 +44,7 @@ namespace WPF_Task_Manager
             else throw new InvalidOperationException("Database connection is not initialized.");
         }
 
-        public MySqlConnection getConnection()
+        public static MySqlConnection getConnection()
         {
             if (myConnect == null) throw new InvalidOperationException("Database connection is not initialized.");
             return myConnect;

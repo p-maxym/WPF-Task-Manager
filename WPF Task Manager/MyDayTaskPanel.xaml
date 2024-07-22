@@ -19,14 +19,14 @@
                         <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
 
                         <Image x:Name="circleImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
-                        <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" PreviewMouseDown="plusImage_PreviewMouseDown" IsHitTestVisible="False"/>
+                        <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
                         <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
 
                         <Label x:Name="myDay" Content="My Day" FontSize="30" Foreground="#5271FF" FontWeight="Bold"/>
                         <Label x:Name="currentData" Content="Now, now 00" FontSize="15" Foreground="#5271FF" FontWeight="Bold"/>
                         <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
 
-                        <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" IsHitTestVisible="False" Visibility="Collapsed"/>
+                        <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="applyImage_PreviewMouseDown"/>
                     </Canvas>
                 </Grid>
             </Border>

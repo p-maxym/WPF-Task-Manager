@@ -124,10 +124,17 @@ namespace WPF_Task_Manager
             plusImage.Visibility = Visibility.Collapsed;
         }
 
-        private void plusImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void applyImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            TaskBox.Dispatcher.BeginInvoke(new Action(() => { TaskBox.Focus();}));
-            TaskBox_GotFocus(TaskBox, new RoutedEventArgs());
+            if (!string.IsNullOrEmpty(TaskBox.Text))
+            {
+                string taskDescription = TaskBox.Text;
+                string taskStatus = "Pending";
+                string taskType = "MyDay";
+                DateTime dueDate = DateTime.Now;
+
+                _ = TaskOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate);
+            }
         }
     }
 }

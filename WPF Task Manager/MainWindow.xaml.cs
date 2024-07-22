@@ -86,13 +86,17 @@ namespace WPF_Task_Manager
         {
             Border? border = sender as Border;
             if (border == null) return;
-            if (border.Name == "closeButton") Close();
+            if (border.Name == "closeButton")
+            {
+                Close();
+                DBConnection.CloseDB();
+            }
 
             else if ((border.Name == "maxMinButton"))
             {
                 if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
-                    
-                else WindowState = WindowState.Maximized;       
+
+                else WindowState = WindowState.Maximized;
             }
 
             else WindowState = WindowState.Minimized;

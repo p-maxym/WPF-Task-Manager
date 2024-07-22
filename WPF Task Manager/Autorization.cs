@@ -11,8 +11,9 @@ namespace WPF_Task_Manager
 {
     class Autorization
     {
-        static public string? _Name, _Password, _Id;
+        static public string? _Name, _Password;
         static private CancellationTokenSource? _ctoken;
+        static public string _Id = "12345678";
 
         static private async Task<bool> AutorizationUserAsync(string login, string password, MySqlCommand msCommand)
         {
