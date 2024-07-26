@@ -7,30 +7,32 @@
              mc:Ignorable="d"
              >
     <Grid>
-        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-            <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
-                <!-- Margin="397, 10, 21, 25" -->
-                <Grid>
-                    <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60">
+        <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
+            <!-- Margin="397, 10, 21, 25" -->
+            <Grid>
+                <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60">
 
-                        <Border Width="550" Height="60" Background="#343434" CornerRadius="20" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder" MouseEnter="TaskBorder_MouseEnter" MouseLeave="TaskBorder_MouseLeave"/>
-                        <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
-                             MouseEnter="TextBox_MouseEnter" MouseLeave="TextBox_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged"/>
-                        <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
+                    <Border Width="550" Height="60" Background="#343434" CornerRadius="20" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder" MouseEnter="TaskBorder_MouseEnter" MouseLeave="TaskBorder_MouseLeave"/>
+                    <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
+                             MouseEnter="TaskBorder_MouseEnter" MouseLeave="TaskBorder_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged"/>
+                    <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
 
-                        <Image x:Name="circleImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
-                        <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
-                        <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
+                    <Image x:Name="circleImage" Source="Resource/circle.png" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
+                    <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
+                    <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
 
-                        <Label x:Name="myDay" Content="My Day" FontSize="30" Foreground="#5271FF" FontWeight="Bold"/>
-                        <Label x:Name="currentData" Content="Now, now 00" FontSize="15" Foreground="#5271FF" FontWeight="Bold"/>
-                        <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
+                    <Label x:Name="myDay" Content="My Day" FontSize="30" Foreground="#5271FF" FontWeight="Bold"/>
+                    <Label x:Name="currentData" Content="Now, now 00" FontSize="15" Foreground="#5271FF" FontWeight="Bold"/>
+                    <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
 
-                        <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="applyImage_PreviewMouseDown"/>
-                    </Canvas>
-                </Grid>
-            </Border>
-        </ScrollViewer>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="taskScrollViewer" >
+                        <Canvas x:Name="taskScrollViewerCanvas" ></Canvas>
+                    </ScrollViewer>
+
+                    <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="applyImage_PreviewMouseDown"/>
+                </Canvas>
+            </Grid>
+        </Border>
         <Button x:Name="HiddenFocusElement" Width="0" Height="0" Opacity="0" Focusable="True"/>
     </Grid>
 </UserControl>  

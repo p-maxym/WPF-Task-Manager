@@ -113,9 +113,10 @@ namespace WPF_Task_Manager
         {
             double actualWidth = MainWindowGrid.ActualWidth - (!plus ? 405 : 420);
             double actualHeight = MainWindowGrid.ActualHeight - (!plus ? 15 : 55);
+
             plus = true;
 
-            myDayTaskPanel.TaskPanelContentResize(actualWidth, actualHeight);
+            myDayTaskPanel.TaskPanelContentScaling(actualWidth, actualHeight);
             taskSectionPanel.TaskSectionPanelResize(actualWidth, actualHeight);
             profilePanel.ProfilePanelVisible(actualWidth);
         }
