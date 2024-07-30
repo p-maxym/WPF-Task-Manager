@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows;
-using System.Diagnostics;
-using System.Windows.Controls.Primitives;
+﻿using System.Diagnostics;
 using System.Globalization;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -32,7 +26,7 @@ namespace WPF_Task_Manager
 
             currentData.Content = $"{textInfo.ToTitleCase(now.ToString("dddd"))}, {textInfo.ToTitleCase(now.ToString("MMMM"))} {now.Day.ToString()}";
         }
-       
+
         public void TaskPanelContentScaling(double actualWidth, double actualHeight)
         {
             _mainWindowActualWidth = actualWidth;
@@ -63,16 +57,6 @@ namespace WPF_Task_Manager
                 Canvas.SetTop(focusOnYourDay, focusOnYourDayTop);
             }
 
-            // Data Label
-            double dataLabelLeft = actualWidth - (actualWidth + 5);
-            double myDayTop = (actualHeight / 2) - (actualHeight * 1.5 - 90);
-            double currentDataTop = (actualHeight / 2) - (actualHeight * 1.5 - 130);
-
-            Canvas.SetLeft(myDay, dataLabelLeft);
-            Canvas.SetTop(myDay, myDayTop);
-            Canvas.SetLeft(currentData, dataLabelLeft);
-            Canvas.SetTop(currentData, currentDataTop);
-
             // Apply task image
             double applyImageLeft = actualWidth + (actualWidth <= 360 ? 270 : -100);
             double applyImageTop = actualHeight - (actualHeight - 5);
@@ -80,8 +64,28 @@ namespace WPF_Task_Manager
             Canvas.SetLeft(applyImage, applyImageLeft);
             Canvas.SetTop(applyImage, applyImageTop);
 
-            // ScrollViewer scaling call
+            //Data label scaling func call
+            DataLabelScaling();
+            // ScrollViewer scaling func call
             TasksAndScrollViewerScaling();
+        }
+
+        private void DataLabelScaling()
+        {
+            //Label size
+            myDay.FontSize = (_mainWindowActualHeight) / (10 + (_mainWindowActualHeight / 115));
+            currentData.FontSize = myDay.FontSize - 15;
+            currentData.Margin = new Thickness(0, 0, 0, 25);
+
+            // Data Label
+            double dataLabelLeft = _mainWindowActualWidth - (_mainWindowActualWidth + 5);
+            double myDayTop = (_mainWindowActualHeight / 2) - (_mainWindowActualHeight * 1.5 - 90);
+            double currentDataTop = (_mainWindowActualHeight / 2) - (_mainWindowActualHeight * 1.5 - (105 + myDay.FontSize));
+
+            Canvas.SetLeft(myDay, dataLabelLeft);
+            Canvas.SetTop(myDay, myDayTop);
+            Canvas.SetLeft(currentData, dataLabelLeft);
+            Canvas.SetTop(currentData, currentDataTop);
         }
 
         private void TaskBorder_MouseEnter(object sender, MouseEventArgs e)
@@ -146,12 +150,11 @@ namespace WPF_Task_Manager
         }
         public void TasksAndScrollViewerScaling()
         {
-            // Set the ScrollViewer height to 40% of the Border height
+            // Set the ScrollViewer height
             double taskScrollViewerHeight = _mainWindowActualHeight * 0.8;
 
             // Center the ScrollViewer vertically within the Border
             double taskScrollViewerTop = -(_mainWindowActualHeight - taskScrollViewerHeight) * 4.1;
-
 
             // Set the width to the same as the Border
             taskScrollViewer.Width = TaskPanelBorder.Width;
@@ -163,17 +166,53 @@ namespace WPF_Task_Manager
             // Set the position of the ScrollViewer
             Canvas.SetLeft(taskScrollViewer, taskScrollViewerLeft);
             Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
+
+            // Tasks Borders + Lables
+            for (int i = 0; i < currentTaskQuantity; i++)
+            {
+                tasksBordersList[i].Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
+
+                double top = (i * 74);
+                if (_mainWindowActualHeight > 700)
+                {
+                    top += (45 + myDay.FontSize);
+                }
+                else if (_mainWindowActualHeight <= 700 && _mainWindowActualHeight > 560)
+                {
+                    top += (50 + myDay.FontSize * 1.5);
+                }
+                else if (_mainWindowActualHeight <= 560)
+                {
+                    top += (50 + myDay.FontSize * 2);
+                }
+
+                // Border
+                Canvas.SetTop(tasksBordersList[i], top - 12);
+
+                // Task description
+                Canvas.SetTop(tasksLabelList[i], top);
+
+                Debug.WriteLine(_mainWindowActualHeight);
+            }
         }
 
-        private void AddTaskLabelToScrollViewer(string labelText, string labelName, double left, double top)
+        //tasks borders list for scaling
+        List<Border> tasksBordersList = new List<Border>();
+        List<Label> tasksLabelList = new List<Label>();
+        private void AddTaskLabelToScrollViewer(string labelText)
         {
-            Border border = new Border
+            double left = (TaskPanelBorder.Width / 2) + (TaskPanelBorder.Width <= 360 ? 30 : -200);
+
+            Border newBorder = new Border
             {
                 Width = TaskPanelBorder.Width - 48,
                 Height = 60,
                 Background = new BrushConverter().ConvertFromString("#343434") as Brush,
-                CornerRadius = new CornerRadius(20),
+                CornerRadius = new CornerRadius(20)
             };
+
+            Canvas.SetLeft(newBorder, left - 75);
+            tasksBordersList.Add(newBorder);
 
             Label newLabel = new Label
             {
@@ -182,21 +221,15 @@ namespace WPF_Task_Manager
                 FontSize = 17,
                 FontWeight = FontWeights.SemiBold
             };
-
             Canvas.SetLeft(newLabel, left);
-            Canvas.SetTop(newLabel, top);
 
-            Canvas.SetLeft(border, left - 75);
-            Canvas.SetTop(border, top - 12);
+            tasksLabelList.Add(newLabel);
 
-            taskScrollViewerCanvas.Children.Add(border);
+            taskScrollViewerCanvas.Children.Add(newBorder);
             taskScrollViewerCanvas.Children.Add(newLabel);
         }
 
         private int currentTaskQuantity = 0;
-        private double _top = 0;
-        private double _left;
-        private double _taskHeight = 450;
         public async void TaskGeneration()
         {
             List<TaskOperations> tasks = await TaskOperations.GetTasksByIdAsync("MyDay");
@@ -206,18 +239,11 @@ namespace WPF_Task_Manager
                 calendarImage.Visibility = Visibility.Collapsed;
                 focusOnYourDay.Visibility = Visibility.Collapsed;
 
-                for(; currentTaskQuantity < tasks.Count; currentTaskQuantity++)
+                for (; currentTaskQuantity < tasks.Count; currentTaskQuantity++)
                 {
                     string? description = tasks[currentTaskQuantity].TaskDescription;
-                    string name = "task" + currentTaskQuantity.ToString();
-                    _left = (TaskPanelBorder.Width / 2) + (TaskPanelBorder.Width <= 360 ? 30 : -200);
-                    _top = (TaskPanelBorder.Height / 2) - (TaskPanelBorder.Height - _taskHeight);
 
-                    if (description != null)
-                    {
-                        AddTaskLabelToScrollViewer(description, name, _left, _top);
-                        _taskHeight += 70;
-                    }
+                    if (description != null) AddTaskLabelToScrollViewer(description);
                 }
             }
         }

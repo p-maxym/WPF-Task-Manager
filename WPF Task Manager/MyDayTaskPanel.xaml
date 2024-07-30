@@ -21,12 +21,12 @@
                     <Image x:Name="plusImage" Source="Resource/plus.png" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
                     <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
 
-                    <Label x:Name="myDay" Content="My Day" FontSize="30" Foreground="#5271FF" FontWeight="Bold"/>
-                    <Label x:Name="currentData" Content="Now, now 00" FontSize="15" Foreground="#5271FF" FontWeight="Bold"/>
+                    <Label x:Name="myDay" Content="My Day" Foreground="#5271FF" FontWeight="Bold"/>
+                    <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
                     <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="taskScrollViewer" >
-                        <Canvas x:Name="taskScrollViewerCanvas" ></Canvas>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="taskScrollViewer" IsHitTestVisible="False">
+                        <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
                     </ScrollViewer>
 
                     <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="applyImage_PreviewMouseDown"/>

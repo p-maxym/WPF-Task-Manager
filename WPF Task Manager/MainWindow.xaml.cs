@@ -1,21 +1,7 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using MySql.Data.MySqlClient;
-using System.Data.Common;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using WpfAnimatedGif;
 
 namespace WPF_Task_Manager
 {
@@ -51,7 +37,7 @@ namespace WPF_Task_Manager
             Border? border = sender as Border;
             if (border == null) return;
             if (border.Name == "closeButton") border.Background = Brushes.Red;
-               
+
             else border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
         }
 
@@ -108,7 +94,6 @@ namespace WPF_Task_Manager
         }
 
         private bool plus = false;
-
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             double actualWidth = MainWindowGrid.ActualWidth - (!plus ? 405 : 420);
