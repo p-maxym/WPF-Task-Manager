@@ -25,7 +25,7 @@
                     <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
                     <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="taskScrollViewer" IsHitTestVisible="False">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  x:Name="taskScrollViewer" IsHitTestVisible="False">
                         <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
                     </ScrollViewer>
 

@@ -73,7 +73,7 @@ namespace WPF_Task_Manager
         private void DataLabelScaling()
         {
             //Label size
-            myDay.FontSize = (_mainWindowActualHeight) / (10 + (_mainWindowActualHeight / 115));
+            myDay.FontSize = (_mainWindowActualHeight) / (10 + (_mainWindowActualHeight / 100));
             currentData.FontSize = myDay.FontSize - 15;
             currentData.Margin = new Thickness(0, 0, 0, 25);
 
@@ -148,6 +148,10 @@ namespace WPF_Task_Manager
                 TaskGeneration();
             }
         }
+
+        // Linear interpolation
+        private double Lerp(double start, double end, double t) { return start + (end - start) * t; }
+
         public void TasksAndScrollViewerScaling()
         {
             // Set the ScrollViewer height
@@ -172,34 +176,25 @@ namespace WPF_Task_Manager
             {
                 tasksBordersList[i].Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
 
-                double top = (i * 74);
-                if (_mainWindowActualHeight > 700)
-                {
-                    top += (45 + myDay.FontSize);
-                }
-                else if (_mainWindowActualHeight <= 700 && _mainWindowActualHeight > 560)
-                {
-                    top += (50 + myDay.FontSize * 1.5);
-                }
-                else if (_mainWindowActualHeight <= 560)
-                {
-                    top += (50 + myDay.FontSize * 2);
-                }
+                double top = i * 74;
+
+                double t = (_mainWindowActualHeight - 500) / (1080 - 500);
+                double startValue = 50 + myDay.FontSize * 2;
+                double endValue = myDay.FontSize;
+                top += Lerp(startValue, endValue, t);
 
                 // Border
                 Canvas.SetTop(tasksBordersList[i], top - 12);
 
                 // Task description
                 Canvas.SetTop(tasksLabelList[i], top);
-
-                Debug.WriteLine(_mainWindowActualHeight);
             }
         }
 
         //tasks borders list for scaling
         List<Border> tasksBordersList = new List<Border>();
         List<Label> tasksLabelList = new List<Label>();
-        private void AddTaskLabelToScrollViewer(string labelText)
+        private void AddTaskToScrollViewer(string labelText)
         {
             double left = (TaskPanelBorder.Width / 2) + (TaskPanelBorder.Width <= 360 ? 30 : -200);
 
@@ -211,9 +206,6 @@ namespace WPF_Task_Manager
                 CornerRadius = new CornerRadius(20)
             };
 
-            Canvas.SetLeft(newBorder, left - 75);
-            tasksBordersList.Add(newBorder);
-
             Label newLabel = new Label
             {
                 Content = labelText,
@@ -221,8 +213,11 @@ namespace WPF_Task_Manager
                 FontSize = 17,
                 FontWeight = FontWeights.SemiBold
             };
+
+            Canvas.SetLeft(newBorder, left - 75);
             Canvas.SetLeft(newLabel, left);
 
+            tasksBordersList.Add(newBorder);
             tasksLabelList.Add(newLabel);
 
             taskScrollViewerCanvas.Children.Add(newBorder);
@@ -243,7 +238,7 @@ namespace WPF_Task_Manager
                 {
                     string? description = tasks[currentTaskQuantity].TaskDescription;
 
-                    if (description != null) AddTaskLabelToScrollViewer(description);
+                    if (description != null) AddTaskToScrollViewer(description);
                 }
             }
         }
