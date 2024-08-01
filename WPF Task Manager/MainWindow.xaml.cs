@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WPF_Task_Manager
 {
@@ -21,12 +22,16 @@ namespace WPF_Task_Manager
                 if (WindowState == WindowState.Maximized)
                 {
                     WindowNameBorder.BorderThickness = new Thickness(7);
-                    labelMaxmin.Content = "❐";
+                    labelMaxmin.Source = new BitmapImage(new Uri("pack://application:,,,/Resource/doublesquare.png"));
+                    labelMaxmin.Width = 25;
+                    labelMaxmin.Height = 25;
                 }
                 else
                 {
                     WindowNameBorder.BorderThickness = new Thickness(0, 0, 0, 0);
-                    labelMaxmin.Content = "☐";
+                    labelMaxmin.Source = new BitmapImage(new Uri("pack://application:,,,/Resource/squareround.png"));
+                    labelMaxmin.Width = 11;
+                    labelMaxmin.Height = 11;
                 }
             }
         }

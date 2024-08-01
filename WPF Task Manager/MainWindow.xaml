@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Task_Manager"
         xmlns:wpfAnimatedGif="clr-namespace:WpfAnimatedGif;assembly=WpfAnimatedGif"
+        xmlns:svg="http://schemas.avaloniaui.net/2005/svg"
         mc:Ignorable="d"
         Title="Task Manager" MinHeight="500" Width="1020" Height="750" MinWidth="460" Background="#222222" WindowStartupLocation="CenterScreen" RenderTransformOrigin="0.5,0.5" Icon="Resource/free-icon-verify-83.png"
         SizeChanged="MainWindow_SizeChanged" MouseDown="FocusReset_MouseDown"
@@ -21,14 +22,14 @@
                         Height="32" VerticalAlignment="Top">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True" DockPanel.Dock="Right" Width="250" Height="32" FlowDirection="RightToLeft" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <Border x:Name="closeButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown"  MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
-                                <Label Content="✕" HorizontalAlignment="Center" Margin="0,1,0,0"  FontSize="14" FontFamily="Arial" Foreground="White"/>
+                            <Border x:Name="closeButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown"  MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Label Content="✕" HorizontalAlignment="Center" Margin="0,3,0,0"  FontSize="14" FontFamily="Arial" Foreground="White"/>
                             </Border>
-                            <Border x:Name="maxMinButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
-                                <Label Name="labelMaxmin" Content="&#9744;" HorizontalAlignment="Center" Margin="0,-1,0,0"  FontSize="14" Foreground="White" />
+                            <Border x:Name="maxMinButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Image Name="labelMaxmin" Source="Resource/sampling_mathod.png" HorizontalAlignment="Center" Margin="0,-1,0,0"/>
                             </Border>
-                            <Border x:Name="rollButton" Width="47" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
-                                <Label Content="&#8211;" HorizontalAlignment="Center" Margin="0,-4,0,0"  FontSize="16" Foreground="White" />
+                            <Border x:Name="rollButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                                <Label Content="&#8211;" HorizontalAlignment="Center" Margin="0,-1,0,0"  FontSize="16" Foreground="White" />
                             </Border>
                         </StackPanel>
                     <Border Width="15" Height="15" Margin="10,0,0,0">

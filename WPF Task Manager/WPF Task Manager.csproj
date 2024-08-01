@@ -15,14 +15,25 @@
     <None Remove="Resource\arrow-purple-blue.png" />
     <None Remove="Resource\arrow-purple_denoiser.png" />
     <None Remove="Resource\arrow.png" />
+    <None Remove="Resource\check.png" />
+    <None Remove="Resource\check.svg" />
     <None Remove="Resource\circle.png" />
+    <None Remove="Resource\circleimage.svg" />
+    <None Remove="Resource\circleimage2.png" />
+    <None Remove="Resource\circleimage2.svg" />
+    <None Remove="Resource\doublesquare.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
     <None Remove="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" />
     <None Remove="Resource\plus.png" />
+    <None Remove="Resource\plus.svg" />
+    <None Remove="Resource\sampling_method.png" />
+    <None Remove="Resource\squareround.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MySql.Data" Version="8.4.0" />
+    <PackageReference Include="MySql.Data" Version="9.0.0" />
+    <PackageReference Include="SharpVectors" Version="1.8.4.1" />
+    <PackageReference Include="Svg.Skia" Version="2.0.0" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
   </ItemGroup>
 
@@ -30,7 +41,16 @@
     <Resource Include="Resource\arrow-purple-blue.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\circle.png" />
+    <Resource Include="Resource\check.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\check.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\circleimage.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\doublesquare.png" />
     <Resource Include="Resource\free-icon-verify-83.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>
@@ -38,7 +58,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\icons8-галочка.gif" />
-    <Resource Include="Resource\plus.png" />
+    <Resource Include="Resource\plus.svg" />
+    <Resource Include="Resource\squareround.png" />
   </ItemGroup>
 
 </Project>

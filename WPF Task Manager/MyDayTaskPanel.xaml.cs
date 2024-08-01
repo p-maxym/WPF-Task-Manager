@@ -1,9 +1,11 @@
-﻿using System.Diagnostics;
+﻿using SharpVectors.Converters;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace WPF_Task_Manager
 {
@@ -24,7 +26,7 @@ namespace WPF_Task_Manager
             DateTime now = DateTime.Now;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
-            currentData.Content = $"{textInfo.ToTitleCase(now.ToString("dddd"))}, {textInfo.ToTitleCase(now.ToString("MMMM"))} {now.Day.ToString()}";
+            currentData.Content = $"{textInfo.ToTitleCase(now.ToString("dddd"))}, {textInfo.ToTitleCase(now.ToString("MMMM"))} {now.Day}";
         }
 
         public void TaskPanelContentScaling(double actualWidth, double actualHeight)
@@ -44,17 +46,15 @@ namespace WPF_Task_Manager
             TaskBox.Width = actualWidth + (actualWidth <= 360 ? 255 : -112);
 
             // Calendar image + focus on day label
-            if (calendarImage.Visibility == Visibility.Visible)
+            if (calendarImageAndTextCanvas.Visibility == Visibility.Visible)
             {
                 double calendarImageLeft = (actualWidth / 2) + (actualWidth <= 360 ? 30 : -150);
                 double calendarImageTop = (actualHeight / 2) - (actualHeight + 70);
-                double focusOnYourDayLeft = (actualWidth / 2) + (actualWidth <= 360 ? 75 : -105);
-                double focusOnYourDayTop = (actualHeight / 2) - (actualHeight - 100);
 
                 Canvas.SetLeft(calendarImage, calendarImageLeft);
                 Canvas.SetTop(calendarImage, calendarImageTop);
-                Canvas.SetLeft(focusOnYourDay, focusOnYourDayLeft);
-                Canvas.SetTop(focusOnYourDay, focusOnYourDayTop);
+                Canvas.SetLeft(focusOnYourDay, calendarImageLeft + 45);
+                Canvas.SetTop(focusOnYourDay, calendarImageTop + 170);
             }
 
             // Apply task image
@@ -107,7 +107,6 @@ namespace WPF_Task_Manager
                 plusImage.Visibility = Visibility.Collapsed;
                 applyImage.Visibility = Visibility.Visible;
             }
-
             else
             {
                 addTaskLabel.Visibility = Visibility.Visible;
@@ -133,7 +132,16 @@ namespace WPF_Task_Manager
             plusImage.Visibility = Visibility.Collapsed;
         }
 
-        private async void applyImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void TaskBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                MouseButtonEventArgs mouseEventArgs = new (Mouse.PrimaryDevice, 0, MouseButton.Left) { RoutedEvent = MouseLeftButtonDownEvent };
+                ApplyImage_PreviewMouseDown(sender, mouseEventArgs);
+            }
+        }
+
+        private async void ApplyImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (!string.IsNullOrEmpty(TaskBox.Text))
             {
@@ -150,7 +158,16 @@ namespace WPF_Task_Manager
         }
 
         // Linear interpolation
-        private double Lerp(double start, double end, double t) { return start + (end - start) * t; }
+        private static double Lerp(double start, double end, double t) { return start + (end - start) * t; }
+        private double GetTaskTopPositio(int i)
+        {
+            double t = (_mainWindowActualHeight - 500) / (1080 - 500);
+            double startValue = 50 + myDay.FontSize * 2;
+            double endValue = myDay.FontSize;
+
+            // i * 80 - indent between tasks
+            return (i * 80) + Lerp(startValue, endValue, t);
+        } 
 
         public void TasksAndScrollViewerScaling()
         {
@@ -172,41 +189,44 @@ namespace WPF_Task_Manager
             Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
 
             // Tasks Borders + Lables
+            
             for (int i = 0; i < currentTaskQuantity; i++)
-            {
+            {    
                 tasksBordersList[i].Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
 
-                double top = i * 74;
-
-                double t = (_mainWindowActualHeight - 500) / (1080 - 500);
-                double startValue = 50 + myDay.FontSize * 2;
-                double endValue = myDay.FontSize;
-                top += Lerp(startValue, endValue, t);
+                double top = GetTaskTopPositio(i);
 
                 // Border
                 Canvas.SetTop(tasksBordersList[i], top - 12);
 
                 // Task description
                 Canvas.SetTop(tasksLabelList[i], top);
+
+                //Circle + check
+                Canvas.SetTop(tasksCheckImage[i], top + 10);
+                Canvas.SetTop(tasksCircleImage[i], top);
             }
         }
 
         //tasks borders list for scaling
-        List<Border> tasksBordersList = new List<Border>();
-        List<Label> tasksLabelList = new List<Label>();
+        readonly List<Border> tasksBordersList = [];
+        readonly List<Label> tasksLabelList = [];
+        readonly List<SvgViewbox> tasksCircleImage = [];
+        readonly List<SvgViewbox> tasksCheckImage = [];
         private void AddTaskToScrollViewer(string labelText)
         {
-            double left = (TaskPanelBorder.Width / 2) + (TaskPanelBorder.Width <= 360 ? 30 : -200);
+            double left = _mainWindowActualWidth - (_mainWindowActualWidth - 100);
+            double top = GetTaskTopPositio(currentTaskQuantity);
 
-            Border newBorder = new Border
+            Border newBorder = new()
             {
-                Width = TaskPanelBorder.Width - 48,
+                Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47),
                 Height = 60,
                 Background = new BrushConverter().ConvertFromString("#343434") as Brush,
-                CornerRadius = new CornerRadius(20)
+                CornerRadius = new CornerRadius(10)
             };
 
-            Label newLabel = new Label
+            Label newLabel = new()
             {
                 Content = labelText,
                 Foreground = Brushes.White,
@@ -214,14 +234,47 @@ namespace WPF_Task_Manager
                 FontWeight = FontWeights.SemiBold
             };
 
-            Canvas.SetLeft(newBorder, left - 75);
-            Canvas.SetLeft(newLabel, left);
+            SvgViewbox newCircleImage = new()
+            {
+                Source = new Uri("pack://application:,,,/Resource/circleimage.svg"),
+                Width = 34,
+                Height = 34,
+                IsHitTestVisible = false,
+            };
 
+            SvgViewbox newCheckImage = new()
+            {
+                Source = new Uri("pack://application:,,,/Resource/check.svg"),
+                Width = 15,
+                Height = 15,
+                IsHitTestVisible = true,
+            };
+
+            //Border
+            Canvas.SetLeft(newBorder, left - 75);
+            Canvas.SetTop(newBorder, top - 12);
+
+            //Label
+            Canvas.SetLeft(newLabel, left - 20);
+            Canvas.SetTop(newLabel, top);
+
+            //Circle Image
+            Canvas.SetLeft(newCircleImage, left - 65);
+            Canvas.SetTop(newCircleImage, top);
+
+            //Check image Image
+            Canvas.SetLeft(newCheckImage, left - 55.5);
+            Canvas.SetTop(newCheckImage, top + 10);
+        
             tasksBordersList.Add(newBorder);
             tasksLabelList.Add(newLabel);
+            tasksCircleImage.Add(newCircleImage);
+            tasksCheckImage.Add(newCheckImage);
 
             taskScrollViewerCanvas.Children.Add(newBorder);
             taskScrollViewerCanvas.Children.Add(newLabel);
+            taskScrollViewerCanvas.Children.Add(newCircleImage);
+            taskScrollViewerCanvas.Children.Add(newCheckImage);
         }
 
         private int currentTaskQuantity = 0;
@@ -231,15 +284,20 @@ namespace WPF_Task_Manager
 
             if (tasks.Count > 0)
             {
-                calendarImage.Visibility = Visibility.Collapsed;
-                focusOnYourDay.Visibility = Visibility.Collapsed;
+                calendarImageAndTextCanvas.Visibility = Visibility.Collapsed;
+                taskScrollViewer.Visibility = Visibility.Visible;
 
-                for (; currentTaskQuantity < tasks.Count; currentTaskQuantity++)
+                for (;currentTaskQuantity < tasks.Count; currentTaskQuantity++)
                 {
                     string? description = tasks[currentTaskQuantity].TaskDescription;
 
                     if (description != null) AddTaskToScrollViewer(description);
                 }
+            }
+            else
+            {
+                calendarImageAndTextCanvas.Visibility = Visibility.Visible;
+                taskScrollViewer.Visibility = Visibility.Collapsed;
             }
         }
     }
