@@ -28,6 +28,7 @@
     <None Remove="Resource\plus.svg" />
     <None Remove="Resource\sampling_method.png" />
     <None Remove="Resource\squareround.png" />
+    <None Remove="Resource\wait-time.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +61,9 @@
     <Resource Include="Resource\icons8-галочка.gif" />
     <Resource Include="Resource\plus.svg" />
     <Resource Include="Resource\squareround.png" />
+    <Resource Include="Resource\wait-time.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

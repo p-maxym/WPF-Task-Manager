@@ -231,7 +231,8 @@ namespace WPF_Task_Manager
                 Content = labelText,
                 Foreground = Brushes.White,
                 FontSize = 17,
-                FontWeight = FontWeights.SemiBold
+                FontWeight = FontWeights.SemiBold,
+                IsHitTestVisible = false
             };
 
             SvgViewbox newCircleImage = new()
@@ -244,7 +245,7 @@ namespace WPF_Task_Manager
 
             SvgViewbox newCheckImage = new()
             {
-                Source = new Uri("pack://application:,,,/Resource/check.svg"),
+                Source = new Uri("pack://application:,,,/Resource/wait-time.svg"),
                 Width = 15,
                 Height = 15,
                 IsHitTestVisible = true,
