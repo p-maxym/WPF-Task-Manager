@@ -10,9 +10,9 @@
         <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
             <Grid>
                 <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60">
-                    <Border Width="550" Height="60" Background="#343434" CornerRadius="10" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder" MouseEnter="TaskBorder_MouseEnter" MouseLeave="TaskBorder_MouseLeave"/>
+                    <Border Width="550" Height="60" Background="#343434" CornerRadius="10" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder"/>
                     <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
-                             MouseEnter="TaskBorder_MouseEnter" MouseLeave="TaskBorder_MouseLeave" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged" KeyDown="TaskBox_KeyDown"/>
+                             HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged" KeyDown="TaskBox_KeyDown"/>
                     <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
 
                     <svgc:SvgViewbox Source="Resource/circleimage.svg" x:Name="circleImage" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
@@ -22,11 +22,11 @@
                     <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
 
                     <Canvas x:Name="calendarImageAndTextCanvas">
-                        <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199" Visibility="Visible"/>
+                        <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199"/>
                         <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
                     </Canvas>
 
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" x:Name="taskScrollViewer" IsHitTestVisible="False" Visibility="Collapsed">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="taskScrollViewer">
                         <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
                     </ScrollViewer>
 

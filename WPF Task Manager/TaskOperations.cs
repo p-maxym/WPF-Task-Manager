@@ -27,7 +27,7 @@ namespace WPF_Task_Manager
                 {
                     string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType)";
 
-                    await using (MySqlCommand cmd = new MySqlCommand(insertQuery, connectStatus))
+                    await using (MySqlCommand cmd = new(insertQuery, connectStatus))
                     {
                         cmd.Parameters.AddWithValue("@id", "12345678");
                         cmd.Parameters.AddWithValue("@TaskDescription", taskDescription);
@@ -52,7 +52,7 @@ namespace WPF_Task_Manager
 
         public static async Task<List<TaskOperations>> GetTasksByIdAsync(string taskType)
         {
-            List<TaskOperations> tasks = new List<TaskOperations>();
+            List<TaskOperations> tasks = [];
             MySqlConnection connectStatus = DBConnection.getConnection();
             try
             {
