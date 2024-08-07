@@ -1,11 +1,39 @@
 ﻿<UserControl x:Class="WPF_Task_Manager.MyDayTaskPanel"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WPF_Task_Manager"
-        xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
-        mc:Ignorable="d">
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:WPF_Task_Manager"
+             xmlns:svgc="http://sharpvectors.codeplex.com/svgc/"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <!-- Define a style for the vertical ScrollBar -->
+        <Style TargetType="ScrollBar" x:Key="CustomScrollBar">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Background" Value="#171717"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid x:Name="GridRoot" Background="{TemplateBinding Background}">
+                            <Track Name="PART_Track" IsDirectionReversed="true">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="DarkGray" CornerRadius="6" Width="10"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
             <Grid>
@@ -14,20 +42,22 @@
                     <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
                              HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged" KeyDown="TaskBox_KeyDown"/>
                     <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
-
                     <svgc:SvgViewbox Source="Resource/circleimage.svg" x:Name="circleImage" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
                     <svgc:SvgViewbox x:Name="plusImage" Source="Resource/plus.svg" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
-
                     <Label x:Name="myDay" Content="My Day" Foreground="#5271FF" FontWeight="Bold"/>
                     <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
-
                     <Canvas x:Name="calendarImageAndTextCanvas">
                         <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199"/>
                         <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
                     </Canvas>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="taskScrollViewer">
-                        <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
+                        <ScrollViewer.Resources>
+                            <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomScrollBar}"/>
+                        </ScrollViewer.Resources>
+                        <StackPanel x:Name="taskStackPanel">
+                            <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
+                        </StackPanel>
                     </ScrollViewer>
 
                     <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="ApplyImage_PreviewMouseDown"/>

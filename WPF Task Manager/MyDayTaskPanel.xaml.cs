@@ -161,46 +161,6 @@ namespace WPF_Task_Manager
             // i * 80 - indent between tasks
             return (i * 80) + Lerp(startValue, endValue, t);
         } 
-
-        public void TasksAndScrollViewerScaling()
-        {
-            // Set the ScrollViewer height
-            double taskScrollViewerHeight = _mainWindowActualHeight * 0.8;
-
-            // Center the ScrollViewer vertically within the Border
-            double taskScrollViewerTop = -(_mainWindowActualHeight - taskScrollViewerHeight) * 4.1;
-
-            // Set the width to the same as the Border
-            taskScrollViewer.Width = TaskPanelBorder.Width;
-            taskScrollViewer.Height = taskScrollViewerHeight;
-
-            // Fixed left position
-            double taskScrollViewerLeft = -25;
-
-            // Set the position of the ScrollViewer
-            Canvas.SetLeft(taskScrollViewer, taskScrollViewerLeft);
-            Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
-
-            // Tasks Borders + Lables
-            
-            for (int i = 0; i < currentTaskQuantity; i++)
-            {    
-                tasksBordersList[i].Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
-
-                double top = GetTaskTopPosition(i);
-
-                // Border
-                Canvas.SetTop(tasksBordersList[i], top - 12);
-
-                // Task description
-                Canvas.SetTop(tasksLabelList[i], top);
-
-                //Circle + check
-                Canvas.SetTop(tasksCheckImage[i], top + 10);
-                Canvas.SetTop(tasksCircleImage[i], top);
-            }
-        }
-
         private void TaskBorder_MouseEnter(object sender, MouseEventArgs e)
         {
             if (sender is Border border) border.Background = new BrushConverter().ConvertFromString("#444444") as Brush;
@@ -230,6 +190,62 @@ namespace WPF_Task_Manager
                 SvgViewbox timeImage = tasksCheckImage[index];
                 timeImage.Source = new Uri("pack://application:,,,/Resource/wait-time.svg");
                 timeImage.Opacity = 1;
+            }
+        }
+        public void TasksAndScrollViewerScaling()
+        {
+            double taskScrollViewerTop = _mainWindowActualHeight <= 550 ? -(_mainWindowActualHeight) / 1.54 : -(_mainWindowActualHeight) / 1.3;
+            double topCorrection = 90;
+            double heightFactor = 1;
+
+            var thresholds = new[]
+            {
+                new { MaxHeight = 500, HeightFactor = 0.6, TaskScrollViewerTopAdjust = 10, TopCorrectionAdjust = 0 },
+                new { MaxHeight = 550, HeightFactor = 0.63, TaskScrollViewerTopAdjust = -8, TopCorrectionAdjust = 0 },
+                new { MaxHeight = 650, HeightFactor = 0.66, TaskScrollViewerTopAdjust = 50, TopCorrectionAdjust = 0 },
+                new { MaxHeight = 700, HeightFactor = 0.7, TaskScrollViewerTopAdjust = 35, TopCorrectionAdjust = -3 },
+                new { MaxHeight = 800, HeightFactor = 0.71, TaskScrollViewerTopAdjust = 30, TopCorrectionAdjust = -13 },
+                new { MaxHeight = 900, HeightFactor = 0.72, TaskScrollViewerTopAdjust = 20, TopCorrectionAdjust = -25 },
+                new { MaxHeight = 1080, HeightFactor = 0.75, TaskScrollViewerTopAdjust = -10, TopCorrectionAdjust = -50 }
+            };
+
+            foreach (var threshold in thresholds)
+            {
+                if (_mainWindowActualHeight <= threshold.MaxHeight)
+                {
+                    heightFactor = threshold.HeightFactor;
+                    taskScrollViewerTop += threshold.TaskScrollViewerTopAdjust;
+                    topCorrection += threshold.TopCorrectionAdjust;
+                    break;
+                }
+            }
+
+            taskScrollViewer.Height = TaskPanelBorder.Height * heightFactor;
+            taskScrollViewer.Width = TaskPanelBorder.Width;
+
+            Canvas.SetLeft(taskScrollViewer, -25);
+            Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
+            
+            taskStackPanel.Height = currentTaskQuantity * 87 > taskScrollViewer.Height ? currentTaskQuantity * 80 : taskScrollViewer.Height;
+
+            Debug.WriteLine(_mainWindowActualHeight);
+
+            // Tasks Borders + Lables
+            for (int i = 0; i < currentTaskQuantity; i++)
+            {
+                tasksBordersList[i].Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
+
+                double top = GetTaskTopPosition(i) - topCorrection;
+
+                // Border
+                Canvas.SetTop(tasksBordersList[i], top - 12);
+
+                // Task description
+                Canvas.SetTop(tasksLabelList[i], top);
+
+                //Circle + check
+                Canvas.SetTop(tasksCheckImage[i], top + 10);
+                Canvas.SetTop(tasksCircleImage[i], top);
             }
         }
 
@@ -268,10 +284,8 @@ namespace WPF_Task_Manager
                 Source = new Uri("pack://application:,,,/Resource/circleimage.svg"),
                 Width = 34,
                 Height = 34,
+                IsHitTestVisible = true,
             };
-
-            newCircleImage.MouseEnter += CircleImage_MouseEnter;
-            newCircleImage.MouseLeave += CircleImage_MouseLeave;
 
             SvgViewbox newTimeImage = new()
             {
@@ -281,28 +295,26 @@ namespace WPF_Task_Manager
                 IsHitTestVisible = false,
             };
 
-            //Border
+            newCircleImage.MouseEnter += CircleImage_MouseEnter;
+            newCircleImage.MouseLeave += CircleImage_MouseLeave;
+
             Canvas.SetLeft(newBorder, left - 75);
             Canvas.SetTop(newBorder, top - 12);
 
-            //Label
             Canvas.SetLeft(newLabel, left - 20);
             Canvas.SetTop(newLabel, top);
 
-            //Circle Image
             Canvas.SetLeft(newCircleImage, left - 65);
             Canvas.SetTop(newCircleImage, top);
 
-            //Check image Image
             Canvas.SetLeft(newTimeImage, left - 55.5);
             Canvas.SetTop(newTimeImage, top + 10);
-        
+
             tasksBordersList.Add(newBorder);
             tasksLabelList.Add(newLabel);
             tasksCircleImage.Add(newCircleImage);
             tasksCheckImage.Add(newTimeImage);
 
-            //To ScrollViewer
             taskScrollViewerCanvas.Children.Add(newBorder);
             taskScrollViewerCanvas.Children.Add(newLabel);
             taskScrollViewerCanvas.Children.Add(newCircleImage);
@@ -331,6 +343,7 @@ namespace WPF_Task_Manager
                 calendarImageAndTextCanvas.Visibility = Visibility.Visible;
                 taskScrollViewer.Visibility = Visibility.Collapsed;
             }
+            TasksAndScrollViewerScaling();
         }
     }
 }
