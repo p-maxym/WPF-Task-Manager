@@ -21,6 +21,7 @@
     <None Remove="Resource\circleimage.svg" />
     <None Remove="Resource\circleimage2.png" />
     <None Remove="Resource\circleimage2.svg" />
+    <None Remove="Resource\dots3.svg" />
     <None Remove="Resource\doublesquare.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
     <None Remove="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" />
@@ -46,6 +47,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\circleimage.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\dots3.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\doublesquare.png" />

@@ -90,9 +90,7 @@ namespace WPF_Task_Manager
             {
                 Debug.WriteLine("ERROR: " + ex.Message);
             }
-
             return tasks;
         }
-
     }
 }
