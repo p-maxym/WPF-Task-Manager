@@ -21,6 +21,7 @@
     <None Remove="Resource\circleimage.svg" />
     <None Remove="Resource\circleimage2.png" />
     <None Remove="Resource\circleimage2.svg" />
+    <None Remove="Resource\delete-bucket.svg" />
     <None Remove="Resource\dots3.svg" />
     <None Remove="Resource\doublesquare.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
@@ -29,6 +30,7 @@
     <None Remove="Resource\plus.svg" />
     <None Remove="Resource\sampling_method.png" />
     <None Remove="Resource\squareround.png" />
+    <None Remove="Resource\star-sharp.svg" />
     <None Remove="Resource\wait-time.svg" />
   </ItemGroup>
 
@@ -49,6 +51,9 @@
     <Resource Include="Resource\circleimage.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\delete-bucket.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\dots3.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -62,6 +67,7 @@
     <Resource Include="Resource\icons8-галочка.gif" />
     <Resource Include="Resource\plus.svg" />
     <Resource Include="Resource\squareround.png" />
+    <Resource Include="Resource\star-sharp.svg" />
     <Resource Include="Resource\wait-time.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

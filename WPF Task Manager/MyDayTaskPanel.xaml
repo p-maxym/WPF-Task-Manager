@@ -61,6 +61,7 @@
                     </ScrollViewer>
 
                     <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="ApplyImage_PreviewMouseDown"/>
+                    <local:TaskSettings x:Name="taskOperationsBorder" Visibility="Collapsed"/>
                 </Canvas>
             </Grid>
         </Border>

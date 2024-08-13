@@ -13,7 +13,7 @@ namespace WPF_Task_Manager
         public AutorizationPanel()
         {
             InitializeComponent();
-            DBConnection.ConnectionDB();
+            DBOperations.ConnectionDB();
             LoginTextBox.Text = "xD";
             PasswordTextBox.Focus();
             Autorization.LoginCheck(this);

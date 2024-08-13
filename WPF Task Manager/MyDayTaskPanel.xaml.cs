@@ -114,6 +114,7 @@ namespace WPF_Task_Manager
                 plusImage.Visibility = Visibility.Visible;
                 TaskBox.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
                 TaskBorder.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
+                HiddenFocusElement.Focus();
             }
         }
 
@@ -144,7 +145,7 @@ namespace WPF_Task_Manager
                 string taskType = "MyDay";
                 DateTime dueDate = DateTime.Now;
 
-                await TaskOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate);
+                await DBOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate);
                 TaskBox.Text = string.Empty;
                 TaskBox_LostFocus(TaskBox, e);
                 TaskGeneration();
@@ -180,6 +181,19 @@ namespace WPF_Task_Manager
         private void DotsBorder_MouseLeave(object sender, MouseEventArgs e)
         {
             if (sender is Border border) border.Background = Brushes.Transparent;
+        }
+
+        private void DotsBorder_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                taskOperationsBorder.Visibility = Visibility.Visible;
+                double currentLeftPosition = Canvas.GetLeft(border);
+                double currentTopPosition = Canvas.GetTop(border);
+
+                Canvas.SetLeft(taskOperationsBorder, currentLeftPosition - 160);
+                Canvas.SetTop(taskOperationsBorder, currentTopPosition - 460);
+            }
         }
 
         private void CircleImage_MouseEnter(object sender, MouseEventArgs e)
@@ -330,6 +344,7 @@ namespace WPF_Task_Manager
 
             dotsHitbox.MouseEnter += DotsBorder_MouseEnter;
             dotsHitbox.MouseLeave += DotsBorder_MouseLeave;
+            dotsHitbox.MouseDown += DotsBorder_MouseDown;
 
             SvgViewbox threeDotsImage = new()
             {
@@ -374,7 +389,7 @@ namespace WPF_Task_Manager
         private int currentTaskQuantity = 0;
         private async void TaskGeneration()
         {
-            List<TaskOperations> tasks = await TaskOperations.GetTasksByIdAsync("MyDay");
+            List<DBOperations> tasks = await DBOperations.GetTasksByIdAsync("MyDay");
 
             if (tasks.Count > 0)
             {

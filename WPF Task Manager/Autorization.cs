@@ -50,7 +50,7 @@ namespace WPF_Task_Manager
                 _ctoken.Dispose();
             }
 
-            if (DBConnection.msCommand == null)
+            if (DBOperations.msCommand == null)
             {
                 Debug.WriteLine("Database command cannot be null!");
                 return;
@@ -69,7 +69,7 @@ namespace WPF_Task_Manager
 
                 try
                 {
-                    isAvailable = await AutorizationUserAsync(_Name, _Password, DBConnection.msCommand);
+                    isAvailable = await AutorizationUserAsync(_Name, _Password, DBOperations.msCommand);
 
                     if (isAvailable)
                     {

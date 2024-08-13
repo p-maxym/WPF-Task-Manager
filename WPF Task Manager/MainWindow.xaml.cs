@@ -80,7 +80,7 @@ namespace WPF_Task_Manager
             if (border.Name == "closeButton")
             {
                 Close();
-                DBConnection.CloseDB();
+                DBOperations.CloseDB();
             }
 
             else if ((border.Name == "maxMinButton"))
