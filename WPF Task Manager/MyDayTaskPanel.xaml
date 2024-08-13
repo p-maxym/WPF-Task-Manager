@@ -56,12 +56,12 @@
                             <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomScrollBar}"/>
                         </ScrollViewer.Resources>
                         <StackPanel x:Name="taskStackPanel">
-                            <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
+                            <Canvas x:Name="taskScrollViewerCanvas">
+                            </Canvas>
                         </StackPanel>
                     </ScrollViewer>
 
                     <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="ApplyImage_PreviewMouseDown"/>
-                    <local:TaskSettings x:Name="taskOperationsBorder" Visibility="Collapsed"/>
                 </Canvas>
             </Grid>
         </Border>

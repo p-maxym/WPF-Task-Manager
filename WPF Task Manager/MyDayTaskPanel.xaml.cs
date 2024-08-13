@@ -13,6 +13,10 @@ namespace WPF_Task_Manager
     partial class MyDayTaskPanel : UserControl
     {
         private double _mainWindowActualWidth, _mainWindowActualHeight;
+        TaskSettings taskOperationsBorder = new TaskSettings
+        {
+            Visibility = Visibility.Collapsed
+        };
 
         public MyDayTaskPanel()
         {
@@ -188,11 +192,12 @@ namespace WPF_Task_Manager
             if (sender is Border border)
             {
                 taskOperationsBorder.Visibility = Visibility.Visible;
+
                 double currentLeftPosition = Canvas.GetLeft(border);
                 double currentTopPosition = Canvas.GetTop(border);
 
-                Canvas.SetLeft(taskOperationsBorder, currentLeftPosition - 160);
-                Canvas.SetTop(taskOperationsBorder, currentTopPosition - 460);
+                Canvas.SetLeft(taskOperationsBorder, currentLeftPosition - 250);
+                Canvas.SetTop(taskOperationsBorder, currentTopPosition + 10);
             }
         }
 
@@ -384,6 +389,9 @@ namespace WPF_Task_Manager
             {
                 taskScrollViewerCanvas.Children.Add(item);
             }
+
+            if (taskScrollViewerCanvas.Children.Contains(taskOperationsBorder)) taskScrollViewerCanvas.Children.Remove(taskOperationsBorder);
+            taskScrollViewerCanvas.Children.Add(taskOperationsBorder);
         }
 
         private int currentTaskQuantity = 0;

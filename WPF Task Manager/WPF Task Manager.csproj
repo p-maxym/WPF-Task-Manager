@@ -17,6 +17,7 @@
     <None Remove="Resource\arrow.png" />
     <None Remove="Resource\check.png" />
     <None Remove="Resource\check.svg" />
+    <None Remove="Resource\circle-check.svg" />
     <None Remove="Resource\circle.png" />
     <None Remove="Resource\circleimage.svg" />
     <None Remove="Resource\circleimage2.png" />
@@ -48,6 +49,7 @@
     <Resource Include="Resource\check.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\circle-check.svg" />
     <Resource Include="Resource\circleimage.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
