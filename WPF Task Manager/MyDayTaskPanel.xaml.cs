@@ -1,11 +1,13 @@
 ﻿using SharpVectors.Converters;
 using SharpVectors.Dom;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
 namespace WPF_Task_Manager
@@ -13,11 +15,7 @@ namespace WPF_Task_Manager
     partial class MyDayTaskPanel : UserControl
     {
         private double _mainWindowActualWidth, _mainWindowActualHeight;
-        TaskSettings taskOperationsBorder = new TaskSettings
-        {
-            Visibility = Visibility.Collapsed
-        };
-
+        
         public MyDayTaskPanel()
         {
             InitializeComponent();
@@ -187,18 +185,41 @@ namespace WPF_Task_Manager
             if (sender is Border border) border.Background = Brushes.Transparent;
         }
 
-        private void DotsBorder_MouseDown(object sender, MouseEventArgs e)
+        private void DotsBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender is Border border)
+            if (Application.Current.MainWindow is MainWindow mainWindow && sender is Border border)
             {
-                taskOperationsBorder.Visibility = Visibility.Visible;
+                int TaskSettingsIndex = taskObjects.FindIndex(t => t.Item5 == border);
 
-                double currentLeftPosition = Canvas.GetLeft(border);
-                double currentTopPosition = Canvas.GetTop(border);
+                //  Obtain absolute coordinates of the border relative to the main window
+                Point borderPosition = border.TransformToAncestor(mainWindow).Transform(new Point(0, 0));
 
-                Canvas.SetLeft(taskOperationsBorder, currentLeftPosition - 250);
-                Canvas.SetTop(taskOperationsBorder, currentTopPosition + 10);
+                // Calculate panel coordinates
+                double currentLeftPositionTaskSettings = borderPosition.X + border.ActualWidth - 400;
+                double currentTopPositionTaskSettings = borderPosition.Y - 100;
+
+                Storyboard animation; // Переменная для анимации
+
+                // Check if the panel does not extend beyond the bottom border of the window
+                if (currentTopPositionTaskSettings + mainWindow.taskSettingsControl.ActualHeight > mainWindow.ActualHeight - 300)
+                {
+                    currentTopPositionTaskSettings = mainWindow.ActualHeight - mainWindow.taskSettingsControl.ActualHeight - 450; // bottom margin
+                    animation = (Storyboard)mainWindow.Resources["SlideUpAnimation"]; // Animation up
+                }
+                else animation = (Storyboard)mainWindow.Resources["SlideDownAnimation"]; // Animation down
+
+                // Open panel + animation
+                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings);
+                animation.Begin(mainWindow.taskSettingsControl);
+
+                // Add a scroll lock handler
+                taskScrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
             }
+        }
+
+        public void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true; // Block scrolling
         }
 
         private void CircleImage_MouseEnter(object sender, MouseEventArgs e)
@@ -389,13 +410,15 @@ namespace WPF_Task_Manager
             {
                 taskScrollViewerCanvas.Children.Add(item);
             }
+        }
 
-            if (taskScrollViewerCanvas.Children.Contains(taskOperationsBorder)) taskScrollViewerCanvas.Children.Remove(taskOperationsBorder);
-            taskScrollViewerCanvas.Children.Add(taskOperationsBorder);
+        private void DotsHitbox_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private int currentTaskQuantity = 0;
-        private async void TaskGeneration()
+        public async void TaskGeneration()
         {
             List<DBOperations> tasks = await DBOperations.GetTasksByIdAsync("MyDay");
 

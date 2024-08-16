@@ -93,9 +93,26 @@ namespace WPF_Task_Manager
             else WindowState = WindowState.Minimized;
         }
 
-        private void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)
+        
+        public void OpenTaskSettingsWindow(double left, double top)
         {
-            if (myDayTaskPanel.TaskBox.IsFocused) myDayTaskPanel.HiddenFocusElement.Focus();
+            taskSettingsControl.Visibility = Visibility.Visible;
+            taskSettingsControl.Margin = new Thickness(left + 100, top + 100, 0, 0);
+        }
+
+        public void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (myDayTaskPanel.TaskBox.IsFocused)
+            {
+                myDayTaskPanel.HiddenFocusElement.Focus();
+            }
+
+            if (taskSettingsControl.Visibility == Visibility.Visible &&
+            !taskSettingsControl.IsMouseOver)
+            {
+                taskSettingsControl.Visibility = Visibility.Collapsed;
+                myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+            }
         }
 
         private bool plus = false;
@@ -109,6 +126,12 @@ namespace WPF_Task_Manager
             myDayTaskPanel.TaskPanelContentScaling(actualWidth, actualHeight);
             taskSectionPanel.TaskSectionPanelResize(actualWidth, actualHeight);
             profilePanel.ProfilePanelVisible(actualWidth);
+
+            var args = new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left)
+            {
+                RoutedEvent = Mouse.MouseDownEvent
+            };
+            FocusReset_MouseDown(this, args);
         }
     }
 }

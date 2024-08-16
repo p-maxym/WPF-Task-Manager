@@ -37,7 +37,7 @@
     <Grid>
         <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
             <Grid>
-                <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60">
+                <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60" x:Name="mainMyDayPanelCanvas">
                     <Border Width="550" Height="60" Background="#343434" CornerRadius="10" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder"/>
                     <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
                              HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged" KeyDown="TaskBox_KeyDown"/>
@@ -56,8 +56,7 @@
                             <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomScrollBar}"/>
                         </ScrollViewer.Resources>
                         <StackPanel x:Name="taskStackPanel">
-                            <Canvas x:Name="taskScrollViewerCanvas">
-                            </Canvas>
+                            <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
                         </StackPanel>
                     </ScrollViewer>
 

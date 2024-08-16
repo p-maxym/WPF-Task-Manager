@@ -14,8 +14,29 @@
         <WindowChrome/>
     </WindowChrome.WindowChrome>
 
+    <Window.Resources>
+        <!-- Анимация для выпадения вниз -->
+        <Storyboard x:Key="SlideDownAnimation">
+            <DoubleAnimation 
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+            From="-100" To="0" Duration="0:0:0.1"/>
+            <DoubleAnimation 
+            Storyboard.TargetProperty="Opacity" 
+            From="0" To="1" Duration="0:0:0.15"/>
+        </Storyboard>
 
-    <Grid  x:Name="MainWindowGrid">
+        <!-- Анимация для выпадения вверх -->
+        <Storyboard x:Key="SlideUpAnimation">
+            <DoubleAnimation 
+            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
+            From="100" To="0" Duration="0:0:0.1" />
+            <DoubleAnimation 
+            Storyboard.TargetProperty="Opacity" 
+            From="0" To="1" Duration="0:0:0.15"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Grid  x:Name="MainWindowGrid"  PreviewMouseDown="FocusReset_MouseDown">
         <Border x:Name="WindowNameBorder">
         <DockPanel>
             <Border Background="#222222" DockPanel.Dock="Top"
@@ -55,5 +76,6 @@
                 </Border>
             </DockPanel>
         </Canvas>
+        <local:TaskSettings x:Name="taskSettingsControl" Visibility="Collapsed"/>
     </Grid>
 </Window>
