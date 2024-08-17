@@ -1,4 +1,5 @@
-﻿using SharpVectors.Converters;
+﻿using MySqlX.XDevAPI.Common;
+using SharpVectors.Converters;
 using SharpVectors.Dom;
 using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
@@ -9,12 +10,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using ZstdSharp;
 
 namespace WPF_Task_Manager
 {
     partial class MyDayTaskPanel : UserControl
     {
         private double _mainWindowActualWidth, _mainWindowActualHeight;
+        private readonly double newMinWindowValue = 380;
         
         public MyDayTaskPanel()
         {
@@ -38,20 +41,20 @@ namespace WPF_Task_Manager
             _mainWindowActualHeight = actualHeight;
 
             // Main border resize
-            TaskPanelBorder.Width = actualWidth + (actualWidth <= 360 ? 370 : 4);
+            TaskPanelBorder.Width = actualWidth + (actualWidth <= newMinWindowValue ? 370 : 4);
             TaskPanelBorder.Height = actualHeight - 2;
 
             // Border content resize
-            double marginLeft = actualWidth <= 360 ? 25 : 395;
+            double marginLeft = actualWidth <= newMinWindowValue ? 25 : 395;
 
             TaskPanelBorder.Margin = new Thickness(marginLeft, 12, 21, 25);
-            TaskBorder.Width = actualWidth + (actualWidth <= 360 ? 320 : -47);
-            TaskBox.Width = actualWidth + (actualWidth <= 360 ? 255 : -112);
+            TaskBorder.Width = actualWidth + (actualWidth <= newMinWindowValue ? 320 : -47);
+            TaskBox.Width = actualWidth + (actualWidth <= newMinWindowValue ? 255 : -112);
 
             // Calendar image + focus on day label
             if (calendarImageAndTextCanvas.Visibility == Visibility.Visible)
             {
-                double calendarImageLeft = (actualWidth / 2) + (actualWidth <= 360 ? 30 : -150);
+                double calendarImageLeft = (actualWidth / 2) + (actualWidth <= newMinWindowValue ? 30 : -150);
                 double calendarImageTop = (actualHeight / 2) - (actualHeight + 70);
 
                 Canvas.SetLeft(calendarImage, calendarImageLeft);
@@ -61,7 +64,7 @@ namespace WPF_Task_Manager
             }
 
             // Apply task image
-            double applyImageLeft = actualWidth + (actualWidth <= 360 ? 270 : -100);
+            double applyImageLeft = actualWidth + (actualWidth <= newMinWindowValue ? 270 : -100);
             double applyImageTop = actualHeight - (actualHeight - 5);
 
             Canvas.SetLeft(applyImage, applyImageLeft);
@@ -69,8 +72,8 @@ namespace WPF_Task_Manager
 
             //Data label scaling func call
             DataLabelScaling();
-            // ScrollViewer scaling func call
-            TasksAndScrollViewerScaling();
+            // ScrollViewer + tasks scaling func call
+            ScrollViewerScaling();
         }
 
         private void DataLabelScaling()
@@ -162,8 +165,15 @@ namespace WPF_Task_Manager
             double startValue = 50 + myDay.FontSize * 2;
             double endValue = myDay.FontSize;
 
+            double topPosition = Lerp(startValue, endValue, t);
+
+            for (int j = 0; j < i; j++)
+            {
+                topPosition += taskObjects[j].Item1.Height + 20;
+            }
+
             // i * 80 - indent between tasks
-            return (i * 80) + Lerp(startValue, endValue, t);
+            return topPosition;
         } 
         private void TaskBorder_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -253,7 +263,8 @@ namespace WPF_Task_Manager
                 }
             }
         }
-        public void TasksAndScrollViewerScaling()
+
+        public void ScrollViewerScaling()
         {
             double taskScrollViewerTop = _mainWindowActualHeight <= 550 ? -(_mainWindowActualHeight) / 1.54 : -(_mainWindowActualHeight) / 1.3;
             double topCorrection = 90;
@@ -286,13 +297,31 @@ namespace WPF_Task_Manager
 
             Canvas.SetLeft(taskScrollViewer, -25);
             Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
-            
-            taskStackPanel.Height = currentTaskQuantity * 87 > taskScrollViewer.Height ? currentTaskQuantity * 80 : taskScrollViewer.Height;
 
+            double allTasksHeight = 0;
+            for (int i = 0; i < currentTaskQuantity; i++)
+            {
+                allTasksHeight += taskObjects[i].Item1.Height + 20;
+            }
+
+            taskStackPanel.Height = allTasksHeight > taskScrollViewer.Height ? allTasksHeight : taskScrollViewer.Height;
+            TasksScaling(topCorrection);
+        }
+
+        private void TasksScaling(double topCorrection)
+        {
             // Tasks Borders + Lables
             for (int i = 0; i < currentTaskQuantity; i++)
             {
-                taskObjects[i].Item1.Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47);
+                taskObjects[i].Item1.Width = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 320 : -47);
+
+                if (taskObjects[i].Item2.Content is string contentText)
+                {
+                    string cleanedText = contentText.Replace("\n", "");
+                    taskObjects[i].Item2.Content = CheckTextLength(cleanedText);
+                }
+
+                taskObjects[i].Item1.Height = lastTaskHeight;
 
                 double top = GetTaskTopPosition(i) - topCorrection;
 
@@ -307,7 +336,7 @@ namespace WPF_Task_Manager
                 Canvas.SetTop(taskObjects[i].Item4, top + 10);
 
                 //3 dots + border
-                double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 305 : -65);
+                double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 305 : -65);
                 Canvas.SetLeft(taskObjects[i].Item5, dotsLeft - 13);
                 Canvas.SetTop(taskObjects[i].Item5, top + 3);
 
@@ -318,48 +347,92 @@ namespace WPF_Task_Manager
 
         //tasks borders list for scaling
         readonly List<(Border, Label, SvgViewbox, SvgViewbox, Border, SvgViewbox)> taskObjects = [];
+
+        // The main function that adds a task
         private void AddTaskToScrollViewer(string labelText)
         {
-            Border newBorder = new()
-            {
-                Width = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 320 : -47),
-                Height = 60,
-                Background = new BrushConverter().ConvertFromString("#343434") as Brush,
-                CornerRadius = new CornerRadius(10),
-            };
+            // Creating controls
+            var newLabel = CreateTaskLabel(labelText);
+            var newCircleImage = CreateCircleImage();
+            var newTimeImage = CreateTimeImage();
+            var dotsHitbox = CreateDotsHitbox();
+            var threeDotsImage = CreateThreeDotsImage();
+            var newBorder = CreateTaskBorder();
 
+            // Linking events
             newBorder.MouseEnter += TaskBorder_MouseEnter;
             newBorder.MouseLeave += TaskBorder_MouseLeave;
 
-            Label newLabel = new()
+            newCircleImage.MouseEnter += CircleImage_MouseEnter;
+            newCircleImage.MouseLeave += CircleImage_MouseLeave;
+
+            dotsHitbox.MouseEnter += DotsBorder_MouseEnter;
+            dotsHitbox.MouseLeave += DotsBorder_MouseLeave;
+            dotsHitbox.MouseDown += DotsBorder_MouseDown;
+
+            //Position
+            PositionTaskElements(newBorder, newLabel, newCircleImage, newTimeImage, dotsHitbox, threeDotsImage);
+
+            // Add to task list
+            taskObjects.Add(new(newBorder, newLabel, newCircleImage, newTimeImage, dotsHitbox, threeDotsImage));
+
+            // Add on Canvas
+            var items = taskObjects[currentTaskQuantity];
+            foreach (var item in new UIElement[] { items.Item1, items.Item2, items.Item3, items.Item4, items.Item5, items.Item6 })
             {
-                Content = labelText,
+                taskScrollViewerCanvas.Children.Add(item);
+            }
+        }
+
+        // Functions for creating controls
+        private Border CreateTaskBorder()
+        {
+            return new Border
+            {
+                Width = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 320 : -47),
+                Height = lastTaskHeight,
+                Background = new BrushConverter().ConvertFromString("#343434") as Brush,
+                CornerRadius = new CornerRadius(10),
+            };
+        }
+
+        private Label CreateTaskLabel(string labelText)
+        {
+            return new Label
+            {
+                Content = CheckTextLength(labelText),
                 Foreground = Brushes.White,
                 FontSize = 17,
                 FontWeight = FontWeights.SemiBold,
                 IsHitTestVisible = false
             };
+        }
 
-            SvgViewbox newCircleImage = new()
+        private SvgViewbox CreateCircleImage()
+        {
+            return new SvgViewbox
             {
                 Source = new Uri("pack://application:,,,/Resource/circleimage.svg"),
                 Width = 34,
                 Height = 34,
                 IsHitTestVisible = true,
             };
+        }
 
-            newCircleImage.MouseEnter += CircleImage_MouseEnter;
-            newCircleImage.MouseLeave += CircleImage_MouseLeave;
-
-            SvgViewbox newTimeImage = new()
+        private SvgViewbox CreateTimeImage()
+        {
+            return new SvgViewbox
             {
                 Source = new Uri("pack://application:,,,/Resource/wait-time.svg"),
                 Width = 15,
                 Height = 15,
                 IsHitTestVisible = false,
             };
+        }
 
-            Border dotsHitbox = new()
+        private Border CreateDotsHitbox()
+        {
+            return new Border
             {
                 Width = 50,
                 Height = 30,
@@ -367,22 +440,26 @@ namespace WPF_Task_Manager
                 CornerRadius = new CornerRadius(8),
                 Background = Brushes.Transparent
             };
+        }
 
-            dotsHitbox.MouseEnter += DotsBorder_MouseEnter;
-            dotsHitbox.MouseLeave += DotsBorder_MouseLeave;
-            dotsHitbox.MouseDown += DotsBorder_MouseDown;
-
-            SvgViewbox threeDotsImage = new()
+        private SvgViewbox CreateThreeDotsImage()
+        {
+            return new SvgViewbox
             {
                 Source = new Uri("pack://application:,,,/Resource/dots3.svg"),
                 Width = 25,
                 Height = 25,
                 IsHitTestVisible = false,
             };
+        }
 
+        // Element positioning function
+        private void PositionTaskElements(Border newBorder, Label newLabel, SvgViewbox newCircleImage, SvgViewbox newTimeImage, Border dotsHitbox, 
+            SvgViewbox threeDotsImage)
+        {   
             double left = _mainWindowActualWidth - (_mainWindowActualWidth - 100);
             double top = GetTaskTopPosition(currentTaskQuantity);
-            double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= 360 ? 305 : -65);
+            double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 305 : -65);
 
             Canvas.SetLeft(newBorder, left - 75);
             Canvas.SetTop(newBorder, top - 12);
@@ -401,18 +478,43 @@ namespace WPF_Task_Manager
 
             Canvas.SetLeft(threeDotsImage, dotsLeft);
             Canvas.SetTop(threeDotsImage, top);
-
-            taskObjects.Add(new(newBorder, newLabel, newCircleImage, newTimeImage,dotsHitbox, threeDotsImage));
-
-            //Add to Canvas
-            var items = taskObjects[currentTaskQuantity];
-            foreach (var item in new UIElement[] { items.Item1, items.Item2, items.Item3, items.Item4, items.Item5, items.Item6 })
-            {
-                taskScrollViewerCanvas.Children.Add(item);
-            }
         }
 
         private int currentTaskQuantity = 0;
+
+        double lastTaskHeight;
+        private string CheckTextLength(string labelText)
+        {
+            lastTaskHeight = 60;
+            string text = "";
+            string tempText = "";
+
+            foreach (var letter in labelText)
+            {
+                string newTempText = tempText + letter;
+
+                // Use FormattedText to calculate the text width
+                var formattedText = new FormattedText(
+                    newTempText, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
+                    new Typeface("Segoe UI"), 17, Brushes.Black, new NumberSubstitution(), 1
+                );
+
+                // Check text width
+                if (formattedText.Width > TaskBorder.Width * 0.85 - 85)
+                {
+                    text += "\n" + letter;
+                    tempText = letter.ToString();
+                    lastTaskHeight += 22.5;
+                }
+                else
+                {
+                    text += letter;
+                    tempText = newTempText;
+                }
+            }
+            return text;
+        }
+
         public async void TaskGeneration()
         {
             List<DBOperations> tasks = await DBOperations.GetTasksByIdAsync("MyDay");
@@ -434,7 +536,7 @@ namespace WPF_Task_Manager
                 calendarImageAndTextCanvas.Visibility = Visibility.Visible;
                 taskScrollViewer.Visibility = Visibility.Collapsed;
             }
-            TasksAndScrollViewerScaling();
+            ScrollViewerScaling();
         }
     }
 }

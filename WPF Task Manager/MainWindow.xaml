@@ -15,7 +15,7 @@
     </WindowChrome.WindowChrome>
 
     <Window.Resources>
-        <!-- Анимация для выпадения вниз -->
+        <!-- Animation for the drop down -->
         <Storyboard x:Key="SlideDownAnimation">
             <DoubleAnimation 
             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
@@ -25,7 +25,7 @@
             From="0" To="1" Duration="0:0:0.15"/>
         </Storyboard>
 
-        <!-- Анимация для выпадения вверх -->
+        <!-- Animation for the drop up -->
         <Storyboard x:Key="SlideUpAnimation">
             <DoubleAnimation 
             Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
@@ -43,13 +43,13 @@
                         Height="32" VerticalAlignment="Top">
                 <DockPanel>
                     <StackPanel Orientation="Horizontal" WindowChrome.IsHitTestVisibleInChrome="True" DockPanel.Dock="Right" Width="250" Height="32" FlowDirection="RightToLeft" VerticalAlignment="Top" HorizontalAlignment="Right">
-                            <Border x:Name="closeButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown"  MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                            <Border x:Name="closeButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="Header_PreviewMouseDown"  MouseLeave="Header_MouseLeave"  MouseEnter="Header_MouseEnter" PreviewMouseUp="Header_PreviewMouseUp">
                                 <Label Content="✕" HorizontalAlignment="Center" Margin="0,3,0,0"  FontSize="14" FontFamily="Arial" Foreground="White"/>
                             </Border>
-                            <Border x:Name="maxMinButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                            <Border x:Name="maxMinButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="Header_PreviewMouseDown" MouseLeave="Header_MouseLeave"  MouseEnter="Header_MouseEnter" PreviewMouseUp="Header_PreviewMouseUp">
                                 <Image Name="labelMaxmin" Source="Resource/sampling_mathod.png" HorizontalAlignment="Center" Margin="0,-1,0,0"/>
                             </Border>
-                            <Border x:Name="rollButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="header_PreviewMouseDown" MouseLeave="header_MouseLeave"  MouseEnter="header_MouseEnter" PreviewMouseUp="header_PreviewMouseUp">
+                            <Border x:Name="rollButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="Header_PreviewMouseDown" MouseLeave="Header_MouseLeave"  MouseEnter="Header_MouseEnter" PreviewMouseUp="Header_PreviewMouseUp">
                                 <Label Content="&#8211;" HorizontalAlignment="Center" Margin="0,-1,0,0"  FontSize="16" Foreground="White" />
                             </Border>
                         </StackPanel>

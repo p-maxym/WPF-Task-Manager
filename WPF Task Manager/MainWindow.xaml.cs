@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -37,7 +38,7 @@ namespace WPF_Task_Manager
         }
 
         // handles button hovering
-        private void header_MouseEnter(object sender, MouseEventArgs e)
+        private void Header_MouseEnter(object sender, MouseEventArgs e)
         {
             Border? border = sender as Border;
             if (border == null) return;
@@ -47,7 +48,7 @@ namespace WPF_Task_Manager
         }
 
         // handles: mouse leaves the button
-        private void header_MouseLeave(object sender, MouseEventArgs e)
+        private void Header_MouseLeave(object sender, MouseEventArgs e)
         {
             Border? border = sender as Border;
             if (border == null) return;
@@ -56,7 +57,7 @@ namespace WPF_Task_Manager
         }
 
         // handles pressing the button
-        private void header_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void Header_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Border? border = sender as Border;
             if (border == null) return;
@@ -73,7 +74,7 @@ namespace WPF_Task_Manager
         }
 
         // control the action of the buttons: close, full screen, small window, minimize to taskbar
-        private void header_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        private void Header_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Border? border = sender as Border;
             if (border == null) return;
@@ -88,6 +89,8 @@ namespace WPF_Task_Manager
                 if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
 
                 else WindowState = WindowState.Maximized;
+
+                MainWindow_SizeChanged(sender, arg);
             }
 
             else WindowState = WindowState.Minimized;
@@ -116,8 +119,10 @@ namespace WPF_Task_Manager
         }
 
         private bool plus = false;
+        SizeChangedEventArgs arg;
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            arg = e;
             double actualWidth = MainWindowGrid.ActualWidth - (!plus ? 405 : 420);
             double actualHeight = MainWindowGrid.ActualHeight - (!plus ? 15 : 55);
 
