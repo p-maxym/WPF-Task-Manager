@@ -198,7 +198,7 @@ namespace WPF_Task_Manager
                 double currentLeftPositionTaskSettings = borderPosition.X + border.ActualWidth - 400;
                 double currentTopPositionTaskSettings = borderPosition.Y - 100;
 
-                Storyboard animation; // Переменная для анимации
+                Storyboard animation;
 
                 // Check if the panel does not extend beyond the bottom border of the window
                 if (currentTopPositionTaskSettings + mainWindow.taskSettingsControl.ActualHeight > mainWindow.ActualHeight - 300)
@@ -410,11 +410,6 @@ namespace WPF_Task_Manager
             {
                 taskScrollViewerCanvas.Children.Add(item);
             }
-        }
-
-        private void DotsHitbox_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         private int currentTaskQuantity = 0;
