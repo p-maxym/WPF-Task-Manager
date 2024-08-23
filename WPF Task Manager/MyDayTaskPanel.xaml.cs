@@ -297,52 +297,50 @@ namespace WPF_Task_Manager
 
             Canvas.SetLeft(taskScrollViewer, -25);
             Canvas.SetTop(taskScrollViewer, taskScrollViewerTop);
-
-            double allTasksHeight = 0;
-            for (int i = 0; i < currentTaskQuantity; i++)
-            {
-                allTasksHeight += taskObjects[i].Item1.Height + 20;
-            }
-
-            taskStackPanel.Height = allTasksHeight > taskScrollViewer.Height ? allTasksHeight : taskScrollViewer.Height;
+            
             TasksScaling(topCorrection);
         }
 
         private void TasksScaling(double topCorrection)
         {
             // Tasks Borders + Lables
+            using (Dispatcher.DisableProcessing())
+            {
+                for (int i = 0; i < currentTaskQuantity; i++)
+                {
+                    var taskObject = taskObjects[i];
+
+                    double width = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 320 : -47);
+                    double top = GetTaskTopPosition(i) - topCorrection;
+                    double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 305 : -65);
+
+                    // Text optimization
+                    if (taskObject.Item2.Content is string contentText)
+                    {
+                        string cleanedText = contentText.Replace("\n", "");
+                        taskObject.Item2.Content = CheckTextLength(cleanedText);
+                    }
+
+                    // Set dimensions and positions
+                    taskObject.Item1.Width = width;
+                    taskObject.Item1.Height = lastTaskHeight;
+                    Canvas.SetTop(taskObject.Item1, top - 12);
+                    Canvas.SetTop(taskObject.Item2, top);
+                    Canvas.SetTop(taskObject.Item3, top);
+                    Canvas.SetTop(taskObject.Item4, top + 10);
+                    Canvas.SetLeft(taskObject.Item5, dotsLeft - 13);
+                    Canvas.SetTop(taskObject.Item5, top + 3);
+                    Canvas.SetLeft(taskObject.Item6, dotsLeft);
+                    Canvas.SetTop(taskObject.Item6, top + 5);
+                }
+            }
+
+            double allTasksHeight = 0;
             for (int i = 0; i < currentTaskQuantity; i++)
             {
-                taskObjects[i].Item1.Width = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 320 : -47);
-
-                if (taskObjects[i].Item2.Content is string contentText)
-                {
-                    string cleanedText = contentText.Replace("\n", "");
-                    taskObjects[i].Item2.Content = CheckTextLength(cleanedText);
-                }
-
-                taskObjects[i].Item1.Height = lastTaskHeight;
-
-                double top = GetTaskTopPosition(i) - topCorrection;
-
-                // Border
-                Canvas.SetTop(taskObjects[i].Item1, top - 12);
-
-                // Task description
-                Canvas.SetTop(taskObjects[i].Item2, top);
-
-                //Circle + check + 3dots
-                Canvas.SetTop(taskObjects[i].Item3, top);
-                Canvas.SetTop(taskObjects[i].Item4, top + 10);
-
-                //3 dots + border
-                double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= newMinWindowValue ? 305 : -65);
-                Canvas.SetLeft(taskObjects[i].Item5, dotsLeft - 13);
-                Canvas.SetTop(taskObjects[i].Item5, top + 3);
-
-                Canvas.SetLeft(taskObjects[i].Item6, dotsLeft);
-                Canvas.SetTop(taskObjects[i].Item6, top + 5);
+                allTasksHeight += taskObjects[i].Item1.Height + 20;
             }
+            taskStackPanel.Height = allTasksHeight > taskScrollViewer.Height ? allTasksHeight : taskScrollViewer.Height;
         }
 
         //tasks borders list for scaling
@@ -480,8 +478,6 @@ namespace WPF_Task_Manager
             Canvas.SetTop(threeDotsImage, top);
         }
 
-        private int currentTaskQuantity = 0;
-
         double lastTaskHeight;
         private string CheckTextLength(string labelText)
         {
@@ -496,7 +492,7 @@ namespace WPF_Task_Manager
                 // Use FormattedText to calculate the text width
                 var formattedText = new FormattedText(
                     newTempText, CultureInfo.CurrentCulture, FlowDirection.LeftToRight,
-                    new Typeface("Segoe UI"), 17, Brushes.Black, new NumberSubstitution(), 1
+                    new Typeface("Segoe UI Semibold"), 17, Brushes.Black, new NumberSubstitution(), 1
                 );
 
                 // Check text width
@@ -515,6 +511,7 @@ namespace WPF_Task_Manager
             return text;
         }
 
+        private int currentTaskQuantity = 0;
         public async void TaskGeneration()
         {
             List<DBOperations> tasks = await DBOperations.GetTasksByIdAsync("MyDay");
