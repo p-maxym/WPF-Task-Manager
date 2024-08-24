@@ -56,7 +56,7 @@
                             <Style TargetType="ScrollBar" BasedOn="{StaticResource CustomScrollBar}"/>
                         </ScrollViewer.Resources>
                         <StackPanel x:Name="taskStackPanel">
-                            <Canvas x:Name="taskScrollViewerCanvas"></Canvas>
+                            <Canvas x:Name="taskScrollViewerCanvas"/>
                         </StackPanel>
                     </ScrollViewer>
 

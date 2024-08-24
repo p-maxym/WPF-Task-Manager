@@ -19,6 +19,7 @@ namespace WPF_Task_Manager
         public DateTime DueDate { get; set; }
         public string? TaskStatus { get; set; }
         public string? TaskType { get; set; }
+        public int Numeration { get; set; }
 
         static readonly string DBConnect = "server=localhost;user=root;password=Parolotmysql1@;" + "database=taskmanagerdb";
         public static MySqlDataAdapter? msDataAdapter;
@@ -93,13 +94,13 @@ namespace WPF_Task_Manager
             MySqlConnection connectStatus = GetConnection();
             try
             {
-                if (connectStatus != null && connectStatus.State == System.Data.ConnectionState.Open)
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
                 {
                     string selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType";
 
                     await using MySqlCommand cmd = new(selectQuery, connectStatus);
                     {
-                        cmd.Parameters.AddWithValue("@id", "12345678");
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
                         cmd.Parameters.AddWithValue("@TaskType", taskType);
 
                         await using DbDataReader dbDataReader = await cmd.ExecuteReaderAsync();
@@ -111,7 +112,8 @@ namespace WPF_Task_Manager
                                     TaskDescription = dbDataReader.GetString("TaskDescription"),
                                     DueDate = dbDataReader.GetDateTime("DueDate"),
                                     TaskStatus = dbDataReader.GetString("TaskStatus"),
-                                    TaskType = dbDataReader.GetString("TaskType")
+                                    TaskType = dbDataReader.GetString("TaskType"),
+                                    Numeration = dbDataReader.GetInt32("Numeration")
                                 };
                                 tasks.Add(task);
                             }
@@ -128,6 +130,36 @@ namespace WPF_Task_Manager
                 Debug.WriteLine("ERROR: " + ex.Message);
             }
             return tasks;
+        }
+
+        public static async Task MarkTaskAsCompleted(int numeration)
+        {
+            MySqlConnection connectStatus = GetConnection();
+
+            try
+            {
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                {
+                    string updateQuery = "UPDATE tasks SET TaskStatus = @TaskStatus WHERE numeration = @numeration AND id = @id";
+
+                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
+                    {
+                        cmd.Parameters.AddWithValue("@TaskStatus", "Completed");
+                        cmd.Parameters.AddWithValue("@numeration", numeration);
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
         }
     }
 }

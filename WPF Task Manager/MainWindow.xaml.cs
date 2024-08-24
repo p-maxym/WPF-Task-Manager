@@ -40,60 +40,65 @@ namespace WPF_Task_Manager
         // handles button hovering
         private void Header_MouseEnter(object sender, MouseEventArgs e)
         {
-            Border? border = sender as Border;
-            if (border == null) return;
-            if (border.Name == "closeButton") border.Background = Brushes.Red;
+            if (sender is Border border)
+            {
+                if (border.Name == "closeButton") border.Background = Brushes.Red;
 
-            else border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
+                else border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
+            }
         }
 
         // handles: mouse leaves the button
         private void Header_MouseLeave(object sender, MouseEventArgs e)
         {
-            Border? border = sender as Border;
-            if (border == null) return;
-            border.Background = new BrushConverter().ConvertFromString("#222222") as Brush;
-            border.Opacity = 1;
+            if (sender is Border border)
+            {
+                border.Background = new BrushConverter().ConvertFromString("#222222") as Brush;
+                border.Opacity = 1;
+            }
         }
 
         // handles pressing the button
         private void Header_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Border? border = sender as Border;
-            if (border == null) return;
-            if (border.Name == "closeButton")
+            if (sender is Border border)
             {
-                border.Background = Brushes.Red;
-                border.Opacity = 0.7;
-            }
-            else
-            {
-                border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
-                border.Opacity = 0.7;
+                if (border.Name == "closeButton")
+                {
+                    border.Background = Brushes.Red;
+                    border.Opacity = 0.7;
+                }
+                else
+                {
+                    border.Background = new BrushConverter().ConvertFromString("#545454") as Brush;
+                    border.Opacity = 0.7;
+                }
             }
         }
 
         // control the action of the buttons: close, full screen, small window, minimize to taskbar
         private void Header_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-            Border? border = sender as Border;
-            if (border == null) return;
-            if (border.Name == "closeButton")
+            if (sender is Border border)
             {
-                Close();
-                DBOperations.CloseDB();
+                if (border.Name == "closeButton")
+                {
+                    Close();
+                    DBOperations.CloseDB();
+                }
+
+                else if ((border.Name == "maxMinButton"))
+                {
+                    if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
+
+                    else WindowState = WindowState.Maximized;
+
+                    if (arg != null) MainWindow_SizeChanged(sender, arg);
+
+                }
+
+                else WindowState = WindowState.Minimized;
             }
-
-            else if ((border.Name == "maxMinButton"))
-            {
-                if (WindowState == WindowState.Maximized) WindowState = WindowState.Normal;
-
-                else WindowState = WindowState.Maximized;
-
-                MainWindow_SizeChanged(sender, arg);
-            }
-
-            else WindowState = WindowState.Minimized;
         }
 
         
@@ -119,7 +124,7 @@ namespace WPF_Task_Manager
         }
 
         private bool plus = false;
-        SizeChangedEventArgs arg;
+        SizeChangedEventArgs? arg = null;
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             arg = e;
