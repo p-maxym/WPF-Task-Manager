@@ -9,8 +9,12 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using System.Windows.Media.Imaging;
 using ZstdSharp;
+using System;
+using System.Reflection;
+using SkiaSharp;
 
 namespace WPF_Task_Manager
 {
@@ -266,6 +270,19 @@ namespace WPF_Task_Manager
             }
         }
 
+        private void MarkTaskAsCompleted(int index)
+        {
+            SvgViewbox image = taskObjects[index].Item4;
+            image.Source = new Uri("pack://application:,,,/Resource/check.svg");
+            image.Opacity = 1;
+
+            image = taskObjects[index].Item3;
+            image.MouseEnter -= CircleImage_MouseEnter;
+            image.MouseLeave -= CircleImage_MouseLeave;
+            image.PreviewMouseDown -= CircleImage_PreviewMouseDown;
+
+            taskObjects[index].Item2.Opacity = 0.6;
+        }
         private async void CircleImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (sender is SvgViewbox circleImage)
@@ -275,21 +292,23 @@ namespace WPF_Task_Manager
 
                 if (index >= 0)
                 {
-                    SvgViewbox image = taskObjects[index].Item4;
-                    image.Source = new Uri("pack://application:,,,/Resource/check.svg");
-                    image.Opacity = 1;
+                    double top = Canvas.GetTop(taskObjects[index].Item2) + 2;
 
-                    image = taskObjects[index].Item3;
-                    image.MouseEnter -= CircleImage_MouseEnter;
-                    image.MouseLeave -= CircleImage_MouseLeave;
-                    image.PreviewMouseDown -= CircleImage_PreviewMouseDown;
+                    MarkTaskAsCompleted(index);
+                    
                     int numeration = tasks[index].Numeration;
 
                     await DBOperations.MarkTaskAsCompleted(numeration);
+
+                    var crossOutLines = AddCrossOut(taskObjects[index].Item2, top, taskObjects[index].Item1.Width);
+                    taskObjects[index] = (taskObjects[index].Item1, taskObjects[index].Item2, taskObjects[index].Item3, taskObjects[index].Item4, taskObjects[index].Item5, taskObjects[index].Item6, crossOutLines);
+
+                    tasks[index].TaskStatus = "Completed";
                 }
             }
         }
 
+        readonly double topCorrection;
         public void ScrollViewerScaling()
         {
             double taskScrollViewerTop = _mainWindowActualHeight <= 550 ? -(_mainWindowActualHeight) / 1.54 : -(_mainWindowActualHeight) / 1.3;
@@ -329,6 +348,7 @@ namespace WPF_Task_Manager
 
         private void TasksScaling(double topCorrection)
         {
+            double allTasksHeight = 0;
             // Tasks Borders + Lables
             using (Dispatcher.DisableProcessing())
             {
@@ -358,19 +378,32 @@ namespace WPF_Task_Manager
                     Canvas.SetTop(taskObject.Item5, top + 3);
                     Canvas.SetLeft(taskObject.Item6, dotsLeft);
                     Canvas.SetTop(taskObject.Item6, top + 5);
+
+                    // Add new cross out lines if the task is completed
+                    if (tasks[i].TaskStatus == "Completed")
+                    {
+                        if (taskObject.Item7 != null)
+                        {
+                            foreach (var line in taskObject.Item7)
+                            {
+                                taskScrollViewerCanvas.Children.Remove(line);
+                            }
+                            taskObject.Item7.Clear(); // Clear the list after removing old lines
+                        }
+
+                        var crossOutLines = AddCrossOut(taskObject.Item2, top + 6, taskObject.Item1.Width);
+                        taskObjects[i] = (taskObject.Item1, taskObject.Item2, taskObject.Item3, taskObject.Item4, taskObject.Item5, taskObject.Item6, crossOutLines);
+                    }
+
+                    allTasksHeight += taskObject.Item1.Height + 20;
                 }
             }
 
-            double allTasksHeight = 0;
-            for (int i = 0; i < currentTaskQuantity; i++)
-            {
-                allTasksHeight += taskObjects[i].Item1.Height + 20;
-            }
             taskStackPanel.Height = allTasksHeight > taskScrollViewer.Height ? allTasksHeight : taskScrollViewer.Height;
         }
 
         //tasks borders list for scaling
-        readonly List<(Border, TextBlock, SvgViewbox, SvgViewbox, Border, SvgViewbox)> taskObjects = [];
+        readonly List<(Border, TextBlock, SvgViewbox, SvgViewbox, Border, SvgViewbox, List<Border>)> taskObjects = [];
 
         // The main function that adds a task
         private void AddTaskToScrollViewer(string labelText)
@@ -382,7 +415,7 @@ namespace WPF_Task_Manager
             var newTimeImage = CreateTimeImage();
             var dotsHitbox = CreateDotsHitbox();
             var threeDotsImage = CreateThreeDotsImage();
-            
+
 
             // Linking events
             newBorder.MouseEnter += TaskBorder_MouseEnter;
@@ -400,7 +433,7 @@ namespace WPF_Task_Manager
             PositionTaskElements(newBorder, newTextBlock, newCircleImage, newTimeImage, dotsHitbox, threeDotsImage);
 
             // Add to task list
-            taskObjects.Add(new(newBorder, newTextBlock, newCircleImage, newTimeImage, dotsHitbox, threeDotsImage));
+            taskObjects.Add(new(newBorder, newTextBlock, newCircleImage, newTimeImage, dotsHitbox, threeDotsImage, []));
 
             // Add on Canvas
             var items = taskObjects[currentTaskQuantity];
@@ -422,12 +455,12 @@ namespace WPF_Task_Manager
             };
         }
 
-        private Border CreateCrossOut()
+        private Border CreateCrossOutLine(double width)
         {
             return new Border
             {
-                Width = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 320 : -100),
-                Height = 3,
+                Width = width,
+                Height = 2.5,
                 Background = new BrushConverter().ConvertFromString("#5271FF") as Brush,
                 CornerRadius = new CornerRadius(2),
             };
@@ -550,6 +583,33 @@ namespace WPF_Task_Manager
             return text;
         }
 
+        private List<Border> AddCrossOut(TextBlock taskTextBlock, double top, double borderWidth)
+        {
+            List<Border> crossOutLines = [];
+            double left = Canvas.GetLeft(taskTextBlock) - 5;
+            double lineHeight = 22.5;
+
+            double currentTop = top + 10;
+
+            int numberOfLines = taskTextBlock.Text.Split('\n').Length;
+
+            for (int i = 0; i < numberOfLines; i++)
+            {
+                // Add a strikethrough line for each line of text
+                Border crossOutLine = CreateCrossOutLine(borderWidth * 0.90 - 85);
+
+                taskScrollViewerCanvas.Children.Add(crossOutLine);
+                crossOutLines.Add(crossOutLine);
+
+                Canvas.SetTop(crossOutLine, currentTop);
+                Canvas.SetLeft(crossOutLine, left);
+
+                currentTop += lineHeight;
+            }
+
+            return crossOutLines;
+        }
+
         private int currentTaskQuantity = 0;
         public async void TaskGeneration()
         {
@@ -565,6 +625,8 @@ namespace WPF_Task_Manager
                     string? description = tasks[currentTaskQuantity].TaskDescription;
 
                     if (description != null) AddTaskToScrollViewer(description);
+
+                    if (tasks[currentTaskQuantity].TaskStatus == "Completed") MarkTaskAsCompleted(currentTaskQuantity);
                 }
             }
             else
