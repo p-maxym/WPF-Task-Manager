@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using System.Media;
 using System.Windows.Shapes;
 using System.Windows.Media.Imaging;
 using ZstdSharp;
@@ -225,7 +226,7 @@ namespace WPF_Task_Manager
                 else animation = (Storyboard)mainWindow.Resources["SlideDownAnimation"]; // Animation down
 
                 // Open panel + animation
-                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings);
+                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings, tasks[TaskSettingsIndex].TaskStatus == "Completed");
                 animation.Begin(mainWindow.taskSettingsControl);
 
                 // Add a scroll lock handler
@@ -270,6 +271,22 @@ namespace WPF_Task_Manager
             }
         }
 
+        private void PlayCompletionSound()
+        {
+            try
+            {
+                // Play Audio
+                using var soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
+                {
+                    soundPlayer.Play();
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
         private void MarkTaskAsCompleted(int index)
         {
             SvgViewbox image = taskObjects[index].Item4;
@@ -298,6 +315,7 @@ namespace WPF_Task_Manager
                     
                     int numeration = tasks[index].Numeration;
 
+                    PlayCompletionSound();
                     await DBOperations.MarkTaskAsCompleted(numeration);
 
                     var crossOutLines = AddCrossOut(taskObjects[index].Item2, top, taskObjects[index].Item1.Width);
@@ -391,7 +409,7 @@ namespace WPF_Task_Manager
                             taskObject.Item7.Clear(); // Clear the list after removing old lines
                         }
 
-                        var crossOutLines = AddCrossOut(taskObject.Item2, top + 6, taskObject.Item1.Width);
+                        var crossOutLines = AddCrossOut(taskObject.Item2, top + 7, taskObject.Item1.Width);
                         taskObjects[i] = (taskObject.Item1, taskObject.Item2, taskObject.Item3, taskObject.Item4, taskObject.Item5, taskObject.Item6, crossOutLines);
                     }
 

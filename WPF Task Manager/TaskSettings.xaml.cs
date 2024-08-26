@@ -22,5 +22,19 @@ namespace WPF_Task_Manager
             // Intercept a click inside TaskSettings to prevent it from being closed
             e.Handled = true;
         }
+
+        public void MarkTaskAsNotCompleted(bool status)
+        {
+            if (status)
+            {
+                setStatusImage.Source = new Uri("pack://application:,,,/Resource/grey-circle.svg");
+                setStatusLabel.Text = "Mark as not completed";
+            }
+            else
+            {
+                setStatusImage.Source = new Uri("pack://application:,,,/Resource/circle-check.svg");
+                setStatusLabel.Text = "Mark as completed";
+            }
+        }
     }
 }

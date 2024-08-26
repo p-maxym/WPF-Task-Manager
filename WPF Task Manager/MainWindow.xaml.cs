@@ -102,10 +102,18 @@ namespace WPF_Task_Manager
         }
 
         
-        public void OpenTaskSettingsWindow(double left, double top)
+        public void OpenTaskSettingsWindow(double left, double top, bool status)
         {
-            taskSettingsControl.Visibility = Visibility.Visible;
-            taskSettingsControl.Margin = new Thickness(left + 100, top + 100, 0, 0);
+            try
+            {
+                taskSettingsControl.MarkTaskAsNotCompleted(status);
+                taskSettingsControl.Visibility = Visibility.Visible;
+                taskSettingsControl.Margin = new Thickness(left + 100, top + 100, 0, 0);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
         }
 
         public void FocusReset_MouseDown(object sender, MouseButtonEventArgs e)

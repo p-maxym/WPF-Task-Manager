@@ -27,9 +27,12 @@
     <None Remove="Resource\doublesquare.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
     <None Remove="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" />
+    <None Remove="Resource\grey-circle.svg" />
     <None Remove="Resource\plus.png" />
     <None Remove="Resource\plus.svg" />
     <None Remove="Resource\sampling_method.png" />
+    <None Remove="Resource\servant-bell-ring.wav" />
+    <None Remove="Resource\servantbellring.wav" />
     <None Remove="Resource\squareround.png" />
     <None Remove="Resource\star-sharp.svg" />
     <None Remove="Resource\wait-time.svg" />
@@ -66,8 +69,14 @@
     <Resource Include="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resource\grey-circle.svg">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\icons8-галочка.gif" />
     <Resource Include="Resource\plus.svg" />
+    <Content Include="Resource\servant-bell-ring.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Resource Include="Resource\squareround.png" />
     <Resource Include="Resource\star-sharp.svg" />
     <Resource Include="Resource\wait-time.svg">
