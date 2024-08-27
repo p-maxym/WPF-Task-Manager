@@ -58,14 +58,13 @@ namespace WPF_Task_Manager
 
         public static async Task AddTaskToDBAsync(string taskDescription, string taskStatus, string taskType, DateTime dueDate)
         {
-            MySqlConnection connectStatus = GetConnection();
-            try
+            if (ConnectionDB())
             {
-                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                try
                 {
                     string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType)";
 
-                    await using MySqlCommand cmd = new(insertQuery, connectStatus);
+                    await using MySqlCommand cmd = new(insertQuery, GetConnection());
                     {
                         cmd.Parameters.AddWithValue("@id", "12345678");
                         cmd.Parameters.AddWithValue("@TaskDescription", taskDescription);
@@ -77,28 +76,31 @@ namespace WPF_Task_Manager
                         Debug.WriteLine($"TASK ADDED SUCCESSFULLY. ROWS AFFECTED: {rowsAffected}");
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                    Debug.WriteLine("ERROR: " + ex.Message);
+                }
+                finally
+                {
+                    CloseDB();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine("ERROR: " + ex.Message);
+                Debug.WriteLine("FAILED CONNECT TO DATABASE.");
             }
         }
 
         public static async Task<List<DBOperations>> GetTasksByIdAsync(string taskType)
         {
-            List<DBOperations> tasks = [];
-            MySqlConnection connectStatus = GetConnection();
-            try
+            List<DBOperations> tasks = new();
+            if (ConnectionDB())
             {
-                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                try
                 {
                     string selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType";
 
-                    await using MySqlCommand cmd = new(selectQuery, connectStatus);
+                    await using MySqlCommand cmd = new(selectQuery, GetConnection());
                     {
                         cmd.Parameters.AddWithValue("@id", Autorization._Id);
                         cmd.Parameters.AddWithValue("@TaskType", taskType);
@@ -120,29 +122,31 @@ namespace WPF_Task_Manager
                         }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                    Debug.WriteLine("ERROR: " + ex.Message);
+                }
+                finally
+                {
+                    CloseDB();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Debug.WriteLine("ERROR: " + ex.Message);
+                Debug.WriteLine("FAILED CONNECT TO DATABASE.");
             }
             return tasks;
         }
 
         public static async Task MarkTaskAsCompleted(int numeration)
         {
-            MySqlConnection connectStatus = GetConnection();
-
-            try
+            if (ConnectionDB())
             {
-                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                try
                 {
                     string updateQuery = "UPDATE tasks SET TaskStatus = @TaskStatus WHERE numeration = @numeration AND id = @id";
 
-                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
+                    await using MySqlCommand cmd = new(updateQuery, GetConnection());
                     {
                         cmd.Parameters.AddWithValue("@TaskStatus", "Completed");
                         cmd.Parameters.AddWithValue("@numeration", numeration);
@@ -151,14 +155,51 @@ namespace WPF_Task_Manager
                         await cmd.ExecuteNonQueryAsync();
                     }
                 }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("ERROR: " + ex.Message);
+                }
+                finally
+                {
+                    CloseDB();
+                }
+            }
+            else
+            {
+                Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+            }
+        }
+
+        public static async Task DeleteTask()
+        {
+            try
+            {
+                if (ConnectionDB())
+                {
+                    string updateQuery = "DELETE FROM tasks WHERE numeration = @numeration";
+
+                    await using MySqlCommand cmd = new(updateQuery, myConnect);
+                    {
+                        cmd.Parameters.AddWithValue("@numeration", TaskSettings._Numeration);
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
                 else
                 {
-                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                    Debug.WriteLine("FAILED TO CONNECT TO DATABASE.");
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine("ERROR: " + ex.Message);
+            }
+            finally
+            {
+                if (myConnect != null && myConnect.State == ConnectionState.Open)
+                {
+                    myConnect.Close();
+                    Debug.WriteLine("DISCONNECTED FROM DATABASE.");
+                }
             }
         }
     }

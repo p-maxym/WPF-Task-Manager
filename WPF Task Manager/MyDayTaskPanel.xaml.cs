@@ -23,6 +23,7 @@ namespace WPF_Task_Manager
     {
         private double _mainWindowActualWidth, _mainWindowActualHeight;
         private readonly double minWindowValue = 380;
+        private SoundPlayer _soundPlayer;
 
         List<DBOperations> tasks = [];
 
@@ -32,6 +33,8 @@ namespace WPF_Task_Manager
 
             LabelDataSet();
             TaskGeneration();
+            _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
+            _soundPlayer.LoadAsync(); // Downloading audio in the background
         }
 
         private void LabelDataSet()
@@ -208,6 +211,8 @@ namespace WPF_Task_Manager
             {
                 int TaskSettingsIndex = taskObjects.FindIndex(t => t.Item5 == border);
 
+                TaskSettings._Numeration = tasks[TaskSettingsIndex].Numeration;
+
                 //  Obtain absolute coordinates of the border relative to the main window
                 Point borderPosition = border.TransformToAncestor(mainWindow).Transform(new Point(0, 0));
 
@@ -271,22 +276,6 @@ namespace WPF_Task_Manager
             }
         }
 
-        private void PlayCompletionSound()
-        {
-            try
-            {
-                // Play Audio
-                using var soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
-                {
-                    soundPlayer.Play();
-                }
-            }
-            catch(Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
-        }
-
         private void MarkTaskAsCompleted(int index)
         {
             SvgViewbox image = taskObjects[index].Item4;
@@ -300,8 +289,24 @@ namespace WPF_Task_Manager
 
             taskObjects[index].Item2.Opacity = 0.6;
         }
-        private async void CircleImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+
+        private void PlayCompletionSound()
         {
+            try
+            {
+                // Play Audio
+                using var soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
+                {
+                    Task.Run(() => _soundPlayer.Play());
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+        private async void CircleImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {   
             if (sender is SvgViewbox circleImage)
             {
                 //Find index
@@ -309,24 +314,20 @@ namespace WPF_Task_Manager
 
                 if (index >= 0)
                 {
+                    PlayCompletionSound();
                     double top = Canvas.GetTop(taskObjects[index].Item2) + 2;
 
                     MarkTaskAsCompleted(index);
-                    
-                    int numeration = tasks[index].Numeration;
-
-                    PlayCompletionSound();
-                    await DBOperations.MarkTaskAsCompleted(numeration);
 
                     var crossOutLines = AddCrossOut(taskObjects[index].Item2, top, taskObjects[index].Item1.Width);
                     taskObjects[index] = (taskObjects[index].Item1, taskObjects[index].Item2, taskObjects[index].Item3, taskObjects[index].Item4, taskObjects[index].Item5, taskObjects[index].Item6, crossOutLines);
 
+                    await DBOperations.MarkTaskAsCompleted(tasks[index].Numeration);
                     tasks[index].TaskStatus = "Completed";
                 }
             }
         }
 
-        readonly double topCorrection;
         public void ScrollViewerScaling()
         {
             double taskScrollViewerTop = _mainWindowActualHeight <= 550 ? -(_mainWindowActualHeight) / 1.54 : -(_mainWindowActualHeight) / 1.3;

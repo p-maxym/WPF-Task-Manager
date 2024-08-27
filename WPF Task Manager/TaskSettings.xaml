@@ -14,19 +14,19 @@
     <Canvas>
         <Border Width="250" Background="#292929" Height="213" BorderThickness="3" BorderBrush="#1B1B1B" CornerRadius="18">
             <Canvas>
-                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="6" VerticalAlignment="Top" Canvas.Left="6"/>
-                <svgc:SvgViewbox Source="Resource/circle-check.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="21" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="setStatusImage"/>
-                <TextBlock Text="Mark as completed" Foreground="#9FA1A2" x:Name="setStatusLabel" FontSize="15" Canvas.Left="47" Canvas.Top="21" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
+                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="6" VerticalAlignment="Top" Canvas.Left="6" MouseEnter="SettingsBorder_MouseEnter" MouseLeave="SettingsBorder_MouseLeave"/>
+                <svgc:SvgViewbox Source="Resource/circle-check.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="21" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="setStatusImage"/>
+                <TextBlock Text="Mark as completed" Foreground="#9FA1A2" x:Name="setStatusLabel" FontSize="15" Canvas.Left="47" Canvas.Top="21" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
 
-                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="65" VerticalAlignment="Top" Canvas.Left="6"/>
-                <svgc:SvgViewbox Source="Resource/star-sharp.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <TextBlock Text="Mark as important" Foreground="#9FA1A2" FontSize="15" Canvas.Left="47" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
+                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="65" VerticalAlignment="Top" Canvas.Left="6" MouseEnter="SettingsBorder_MouseEnter" MouseLeave="SettingsBorder_MouseLeave"/>
+                <svgc:SvgViewbox Source="Resource/star-sharp.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="80" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="Mark as important" Foreground="#9FA1A2" FontSize="15" Canvas.Left="47" Canvas.Top="80" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
 
                 <Border CornerRadius="1" Height="3" Width="232" Background="#424242" HorizontalAlignment="Center" Canvas.Top="140" VerticalAlignment="Top" Canvas.Left="6"/>
 
-                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="151" VerticalAlignment="Top" Canvas.Left="6"/>
-                <svgc:SvgViewbox Source="Resource/delete-bucket.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="166" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-                <TextBlock Text="Delete" Foreground="#F42D2D" FontSize="15" Canvas.Left="47" Canvas.Top="166" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
+                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="151" VerticalAlignment="Top" Canvas.Left="6" MouseEnter="SettingsBorder_MouseEnter" MouseLeave="SettingsBorder_MouseLeave"/>
+                <svgc:SvgViewbox Source="Resource/delete-bucket.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="166" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Delete" Foreground="#F42D2D" FontSize="15" Canvas.Left="47" Canvas.Top="166" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
             </Canvas>
         </Border>
     </Canvas>
