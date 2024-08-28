@@ -16,14 +16,17 @@ using ZstdSharp;
 using System;
 using System.Reflection;
 using SkiaSharp;
+using System.Runtime.CompilerServices;
 
 namespace WPF_Task_Manager
 {
     partial class MyDayTaskPanel : UserControl
     {
-        private double _mainWindowActualWidth, _mainWindowActualHeight;
-        private readonly double minWindowValue = 380;
-        private SoundPlayer _soundPlayer;
+        double _mainWindowActualWidth, _mainWindowActualHeight;
+        const double minWindowValue = 380;
+        readonly SoundPlayer _soundPlayer;
+        int _Numeration;
+        MainWindow? _mainWindow;
 
         List<DBOperations> tasks = [];
 
@@ -35,6 +38,7 @@ namespace WPF_Task_Manager
             TaskGeneration();
             _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
             _soundPlayer.LoadAsync(); // Downloading audio in the background
+            
         }
 
         private void LabelDataSet()
@@ -163,6 +167,7 @@ namespace WPF_Task_Manager
                 await DBOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate);
                 TaskBox.Text = string.Empty;
                 TaskBox_LostFocus(TaskBox, e);
+
                 TaskGeneration();
             }
         }
@@ -211,7 +216,7 @@ namespace WPF_Task_Manager
             {
                 int TaskSettingsIndex = taskObjects.FindIndex(t => t.Item5 == border);
 
-                TaskSettings._Numeration = tasks[TaskSettingsIndex].Numeration;
+                _Numeration = tasks[TaskSettingsIndex].Numeration;
 
                 //  Obtain absolute coordinates of the border relative to the main window
                 Point borderPosition = border.TransformToAncestor(mainWindow).Transform(new Point(0, 0));
@@ -236,6 +241,9 @@ namespace WPF_Task_Manager
 
                 // Add a scroll lock handler
                 taskScrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
+
+                _mainWindow = mainWindow;
+                _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown += DeleteBorder_PreviewMouseDown;
             }
         }
 
@@ -474,7 +482,7 @@ namespace WPF_Task_Manager
             };
         }
 
-        private Border CreateCrossOutLine(double width)
+        private static Border CreateCrossOutLine(double width)
         {
             return new Border
             {
@@ -508,7 +516,7 @@ namespace WPF_Task_Manager
             };
         }
 
-        private SvgViewbox CreateTimeImage()
+        private static SvgViewbox CreateTimeImage()
         {
             return new SvgViewbox
             {
@@ -519,7 +527,7 @@ namespace WPF_Task_Manager
             };
         }
 
-        private Border CreateDotsHitbox()
+        private static Border CreateDotsHitbox()
         {
             return new Border
             {
@@ -531,7 +539,7 @@ namespace WPF_Task_Manager
             };
         }
 
-        private SvgViewbox CreateThreeDotsImage()
+        private static SvgViewbox CreateThreeDotsImage()
         {
             return new SvgViewbox
             {
@@ -629,7 +637,53 @@ namespace WPF_Task_Manager
             return crossOutLines;
         }
 
-        private int currentTaskQuantity = 0;
+        private async void DeleteBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            await DBOperations.DeleteTask(_Numeration);
+            RemoveTaskByIndex();
+        }
+
+        public void RemoveTaskByIndex()
+        {
+            int index = tasks.FindIndex(t => t.Numeration == _Numeration);
+
+            if (index >= 0 && index < taskObjects.Count && index < tasks.Count)
+            {
+                var taskObject = taskObjects[index];
+
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item1);
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item2);
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item3);
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item4);
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item5);
+                taskScrollViewerCanvas.Children.Remove(taskObject.Item6);
+
+                if (taskObject.Item7 != null)
+                {
+                    foreach (var line in taskObject.Item7)
+                    {
+                        taskScrollViewerCanvas.Children.Remove(line);
+                    }
+                }
+
+                taskObjects.RemoveAt(index);
+                tasks.RemoveAt(index);
+
+                Debug.WriteLine(tasks.Count);
+                Debug.WriteLine(currentTaskQuantity);
+                currentTaskQuantity--;
+
+                if(_mainWindow != null)
+                {
+                    _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
+                    _mainWindow.taskSettingsControl.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
+                }
+
+                ScrollViewerScaling();
+            }
+        }
+
+        int currentTaskQuantity = 0;
         public async void TaskGeneration()
         {
             tasks = await DBOperations.GetTasksByIdAsync("MyDay");
@@ -653,6 +707,8 @@ namespace WPF_Task_Manager
                 calendarImageAndTextCanvas.Visibility = Visibility.Visible;
                 taskScrollViewer.Visibility = Visibility.Collapsed;
             }
+            Debug.WriteLine(tasks.Count);
+            Debug.WriteLine(currentTaskQuantity);
             ScrollViewerScaling();
         }
     }

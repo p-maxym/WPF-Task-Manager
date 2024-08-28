@@ -8,21 +8,15 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace WPF_Task_Manager
 {
     partial class TaskSettings : UserControl
     {
-        public static int _Numeration;
         public TaskSettings()
         {
             InitializeComponent();
-        }
-
-        private void TaskSettings_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            // Intercept a click inside TaskSettings to prevent it from being closed
-            e.Handled = true;
         }
 
         private void SettingsBorder_MouseEnter(object sender, MouseEventArgs e)
