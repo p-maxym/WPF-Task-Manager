@@ -13,7 +13,7 @@
     <Canvas>
         <Border Width="250" Background="#292929" Height="213" BorderThickness="3" BorderBrush="#1B1B1B" CornerRadius="18">
             <Canvas>
-                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" HorizontalAlignment="Center" Canvas.Top="6" VerticalAlignment="Top" Canvas.Left="6" MouseEnter="SettingsBorder_MouseEnter" MouseLeave="SettingsBorder_MouseLeave"/>
+                <Border CornerRadius="10" Height="50" Width="232" Background="#1B1B1B" x:Name="markBorder" HorizontalAlignment="Center" Canvas.Top="6" VerticalAlignment="Top" Canvas.Left="6" MouseEnter="SettingsBorder_MouseEnter" MouseLeave="SettingsBorder_MouseLeave"/>
                 <svgc:SvgViewbox Source="Resource/circle-check.svg" Width="20" Height="20" Canvas.Left="19" Canvas.Top="21" IsHitTestVisible="False" HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="setStatusImage"/>
                 <TextBlock Text="Mark as completed" Foreground="#9FA1A2" x:Name="setStatusLabel" FontSize="15" Canvas.Left="47" Canvas.Top="21" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" RenderTransformOrigin="0.535,0.486"/>
 

@@ -29,7 +29,7 @@ namespace WPF_Task_Manager
             if (sender is Border border) border.Background = new BrushConverter().ConvertFromString("#1B1B1B") as Brush;
         }
 
-        public void MarkTaskAsNotCompleted(bool status)
+        public void MarkTaskOption(bool status)
         {
             if (status)
             {

@@ -106,7 +106,7 @@ namespace WPF_Task_Manager
         {
             try
             {
-                taskSettingsControl.MarkTaskAsNotCompleted(status);
+                taskSettingsControl.MarkTaskOption(status);
                 taskSettingsControl.Visibility = Visibility.Visible;
                 taskSettingsControl.Margin = new Thickness(left + 100, top + 100, 0, 0);
             }
@@ -123,8 +123,7 @@ namespace WPF_Task_Manager
                 myDayTaskPanel.HiddenFocusElement.Focus();
             }
 
-            if (taskSettingsControl.Visibility == Visibility.Visible &&
-            !taskSettingsControl.IsMouseOver)
+            if (taskSettingsControl.Visibility == Visibility.Visible && !taskSettingsControl.IsMouseOver)
             {
                 taskSettingsControl.Visibility = Visibility.Collapsed;
                 myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= myDayTaskPanel.ScrollViewer_PreviewMouseWheel;

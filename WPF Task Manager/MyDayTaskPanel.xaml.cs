@@ -38,7 +38,6 @@ namespace WPF_Task_Manager
             TaskGeneration();
             _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
             _soundPlayer.LoadAsync(); // Downloading audio in the background
-            
         }
 
         private void LabelDataSet()
@@ -236,14 +235,21 @@ namespace WPF_Task_Manager
                 else animation = (Storyboard)mainWindow.Resources["SlideDownAnimation"]; // Animation down
 
                 // Open panel + animation
-                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings, tasks[TaskSettingsIndex].TaskStatus == "Completed");
+                bool status = tasks[TaskSettingsIndex].TaskStatus == "Completed";
+
+                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings, status);
                 animation.Begin(mainWindow.taskSettingsControl);
 
                 // Add a scroll lock handler
                 taskScrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
 
                 _mainWindow = mainWindow;
+                _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
+                _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
+
                 _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown += DeleteBorder_PreviewMouseDown;
+                if (status) _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkPending_PreviewMouseDown;
+                else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkCompleted_PreviewMouseDown;
             }
         }
 
@@ -284,9 +290,55 @@ namespace WPF_Task_Manager
             }
         }
 
-        private void MarkTaskAsCompleted(int index)
+        private async void DeleteBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            await DBOperations.DeleteTask(_Numeration);
+            RemoveTaskByIndex();
+        }
+        private void TaskSettingsMarkPending_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int index = tasks.FindIndex(t => t.Numeration == _Numeration);
+
+            if (index >= 0)
+            {
+                MarkTaskAsPending(index);
+
+                if (_mainWindow != null)
+                {
+                    _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
+                    _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+                }
+            }
+        }
+
+        private void TaskSettingsMarkCompleted_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int index = tasks.FindIndex(t => t.Numeration == _Numeration);
+
+            if (index >= 0)
+            {
+                MarkTaskAsCompleted(index);
+
+                if (_mainWindow != null)
+                {
+                    _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
+                    _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+                }
+            }
+        }
+
+        private async void MarkTaskAsCompleted(int index)
+        {
+            if (tasks[index].TaskStatus != "Completed")
+            {
+                await DBOperations.MarkTaskAsCompleted(tasks[index].Numeration);
+                PlayCompletionSound();
+                tasks[index].TaskStatus = "Completed";
+            }
+
+            ClearCrossOut(index);
             SvgViewbox image = taskObjects[index].Item4;
+
             image.Source = new Uri("pack://application:,,,/Resource/check.svg");
             image.Opacity = 1;
 
@@ -296,6 +348,29 @@ namespace WPF_Task_Manager
             image.PreviewMouseDown -= CircleImage_PreviewMouseDown;
 
             taskObjects[index].Item2.Opacity = 0.6;
+
+            ScrollViewerScaling();
+        }
+
+        private async void MarkTaskAsPending(int index)
+        {
+            await DBOperations.MarkTaskAsPending(tasks[index].Numeration);
+            SvgViewbox image = taskObjects[index].Item4;
+
+            image.Source = new Uri("pack://application:,,,/Resource/wait-time.svg");
+            image.Opacity = 1;
+
+            image = taskObjects[index].Item3;
+            image.MouseEnter += CircleImage_MouseEnter;
+            image.MouseLeave += CircleImage_MouseLeave;
+            image.PreviewMouseDown += CircleImage_PreviewMouseDown;
+
+            taskObjects[index].Item2.Opacity = 1;
+
+            ClearCrossOut(index);
+
+            tasks[index].TaskStatus = "Pending";
+            ScrollViewerScaling();
         }
 
         private void PlayCompletionSound()
@@ -313,7 +388,7 @@ namespace WPF_Task_Manager
                 Debug.WriteLine(ex);
             }
         }
-        private async void CircleImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void CircleImage_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {   
             if (sender is SvgViewbox circleImage)
             {
@@ -323,15 +398,7 @@ namespace WPF_Task_Manager
                 if (index >= 0)
                 {
                     PlayCompletionSound();
-                    double top = Canvas.GetTop(taskObjects[index].Item2) + 2;
-
                     MarkTaskAsCompleted(index);
-
-                    var crossOutLines = AddCrossOut(taskObjects[index].Item2, top, taskObjects[index].Item1.Width);
-                    taskObjects[index] = (taskObjects[index].Item1, taskObjects[index].Item2, taskObjects[index].Item3, taskObjects[index].Item4, taskObjects[index].Item5, taskObjects[index].Item6, crossOutLines);
-
-                    await DBOperations.MarkTaskAsCompleted(tasks[index].Numeration);
-                    tasks[index].TaskStatus = "Completed";
                 }
             }
         }
@@ -344,7 +411,7 @@ namespace WPF_Task_Manager
 
             var thresholds = new[]
             {
-                new { MaxHeight = 500, HeightFactor = 0.6, TaskScrollViewerTopAdjust = 10, TopCorrectionAdjust = 0 },
+                new { MaxHeight = 500, HeightFactor = 0.6, TaskScrollViewerTopAdjust = 10, TopCorrectionAdjust = 10 },
                 new { MaxHeight = 550, HeightFactor = 0.63, TaskScrollViewerTopAdjust = -8, TopCorrectionAdjust = 0 },
                 new { MaxHeight = 650, HeightFactor = 0.66, TaskScrollViewerTopAdjust = 50, TopCorrectionAdjust = 0 },
                 new { MaxHeight = 700, HeightFactor = 0.7, TaskScrollViewerTopAdjust = 35, TopCorrectionAdjust = -3 },
@@ -409,14 +476,7 @@ namespace WPF_Task_Manager
                     // Add new cross out lines if the task is completed
                     if (tasks[i].TaskStatus == "Completed")
                     {
-                        if (taskObject.Item7 != null)
-                        {
-                            foreach (var line in taskObject.Item7)
-                            {
-                                taskScrollViewerCanvas.Children.Remove(line);
-                            }
-                            taskObject.Item7.Clear(); // Clear the list after removing old lines
-                        }
+                        ClearCrossOut(i);
 
                         var crossOutLines = AddCrossOut(taskObject.Item2, top + 7, taskObject.Item1.Width);
                         taskObjects[i] = (taskObject.Item1, taskObject.Item2, taskObject.Item3, taskObject.Item4, taskObject.Item5, taskObject.Item6, crossOutLines);
@@ -637,10 +697,18 @@ namespace WPF_Task_Manager
             return crossOutLines;
         }
 
-        private async void DeleteBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void ClearCrossOut(int index)
         {
-            await DBOperations.DeleteTask(_Numeration);
-            RemoveTaskByIndex();
+            var taskObject = taskObjects[index];
+
+            if (taskObject.Item7.Count > 0)
+            {
+                foreach (var line in taskObject.Item7)
+                {
+                    taskScrollViewerCanvas.Children.Remove(line);
+                }
+                taskObject.Item7.Clear(); // Clear the list after removing old lines
+            }
         }
 
         public void RemoveTaskByIndex()
@@ -658,26 +726,20 @@ namespace WPF_Task_Manager
                 taskScrollViewerCanvas.Children.Remove(taskObject.Item5);
                 taskScrollViewerCanvas.Children.Remove(taskObject.Item6);
 
-                if (taskObject.Item7 != null)
+                ClearCrossOut(index);
+
+                if (_mainWindow != null)
                 {
-                    foreach (var line in taskObject.Item7)
-                    {
-                        taskScrollViewerCanvas.Children.Remove(line);
-                    }
+                    _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
+                    _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+
+                    if (tasks[index].TaskStatus == "Completed") _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
+                    else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
                 }
 
                 taskObjects.RemoveAt(index);
                 tasks.RemoveAt(index);
-
-                Debug.WriteLine(tasks.Count);
-                Debug.WriteLine(currentTaskQuantity);
-                currentTaskQuantity--;
-
-                if(_mainWindow != null)
-                {
-                    _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
-                    _mainWindow.taskSettingsControl.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
-                }
+                currentTaskQuantity = tasks.Count;
 
                 ScrollViewerScaling();
             }
@@ -707,8 +769,6 @@ namespace WPF_Task_Manager
                 calendarImageAndTextCanvas.Visibility = Visibility.Visible;
                 taskScrollViewer.Visibility = Visibility.Collapsed;
             }
-            Debug.WriteLine(tasks.Count);
-            Debug.WriteLine(currentTaskQuantity);
             ScrollViewerScaling();
         }
     }

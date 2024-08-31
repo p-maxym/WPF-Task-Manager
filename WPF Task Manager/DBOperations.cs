@@ -132,6 +132,36 @@ namespace WPF_Task_Manager
             return tasks;
         }
 
+        public static async Task MarkTaskAsPending(int numeration)
+        {
+            MySqlConnection connectStatus = GetConnection();
+
+            try
+            {
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                {
+                    string updateQuery = "UPDATE tasks SET TaskStatus = @TaskStatus WHERE numeration = @numeration AND id = @id";
+
+                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
+                    {
+                        cmd.Parameters.AddWithValue("@TaskStatus", "Pending");
+                        cmd.Parameters.AddWithValue("@numeration", numeration);
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
+        }
+
         public static async Task MarkTaskAsCompleted(int numeration)
         {
             MySqlConnection connectStatus = GetConnection();
