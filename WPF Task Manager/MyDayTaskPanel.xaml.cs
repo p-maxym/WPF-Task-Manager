@@ -244,6 +244,7 @@ namespace WPF_Task_Manager
                 taskScrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
 
                 _mainWindow = mainWindow;
+                _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
                 _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
                 _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
 
@@ -732,9 +733,6 @@ namespace WPF_Task_Manager
                 {
                     _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
                     _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
-
-                    if (tasks[index].TaskStatus == "Completed") _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
-                    else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
                 }
 
                 taskObjects.RemoveAt(index);

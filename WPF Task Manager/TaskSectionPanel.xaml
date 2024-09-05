@@ -7,9 +7,23 @@
              mc:Ignorable="d"
              >
     <Canvas>
-    <Border Width="350" Height="500" Background="#171717"
-                CornerRadius="20" Margin="21,195,649,25" x:Name="TaskSectionBorder">
-        
-    </Border>
+        <Border Width="350" Height="500" Background="#171717"
+                CornerRadius="15" Margin="21,195,649,25" x:Name="TaskSectionBorder">
+            <StackPanel>
+                <Border Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="My Day" Foreground="White" Margin="-70,-52,0,0" FontSize="21" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
+
+                <Border Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Important" Foreground="White" Margin="-70,-52,0,0" FontSize="21" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
+
+                <Border Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Shopping" Foreground="White" Margin="-70,-52,0,0" FontSize="21" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
+
+                <Border Width="270" Height="2" CornerRadius="2" Background="White" Margin="0,30,0,0"/>
+                
+                <Border Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,30,0,0" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Tasks" Foreground="White" Margin="-70,-52,0,0" FontSize="21" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
+            </StackPanel>
+        </Border>
     </Canvas>
 </UserControl>

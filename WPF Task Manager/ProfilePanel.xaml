@@ -8,7 +8,7 @@
              >
     <Canvas>
     <Border Width="350" Height="160" Background="#171717"
-                CornerRadius="20" Margin="21,12,647,531" x:Name="ProfilePanelBorder">
+                CornerRadius="15" Margin="21,12,647,531" x:Name="ProfilePanelBorder">
 
     </Border>
     </Canvas>

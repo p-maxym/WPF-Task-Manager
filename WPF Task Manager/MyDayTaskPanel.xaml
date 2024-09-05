@@ -35,7 +35,7 @@
     </UserControl.Resources>
 
     <Grid>
-        <Border Width="600" Height="685" Background="#171717" CornerRadius="20" x:Name="TaskPanelBorder">
+        <Border Width="600" Height="685" Background="#171717" CornerRadius="15" x:Name="TaskPanelBorder">
             <Grid>
                 <Canvas Grid.Row="1" VerticalAlignment="Bottom" Margin="25,0,25,19" Height="60" x:Name="mainMyDayPanelCanvas">
                     <Border Width="550" Height="60" Background="#343434" CornerRadius="10" Canvas.Left="0" Canvas.Top="0" x:Name="TaskBorder"/>
