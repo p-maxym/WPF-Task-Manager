@@ -13,18 +13,29 @@ using MySql.Data.MySqlClient;
 
 namespace WPF_Task_Manager
 {
-    class DBOperations
+    public class DBOperations
     {
         public string? TaskDescription { get; set; }
         public DateTime DueDate { get; set; }
         public string? TaskStatus { get; set; }
         public string? TaskType { get; set; }
+        public int Important { get; set; }
         public int Numeration { get; set; }
 
         static readonly string DBConnect = "server=localhost;user=root;password=Parolotmysql1@;" + "database=taskmanagerdb";
-        public static MySqlDataAdapter? msDataAdapter;
+        static MySqlDataAdapter? msDataAdapter;
+        public static MySqlDataAdapter? MsDataAdapterInstance
+        {
+            get => msDataAdapter;
+            private set => msDataAdapter = value;
+        }
         static MySqlConnection? myConnect;
-        static public MySqlCommand? msCommand;
+        static MySqlCommand? msCommand;
+        public static MySqlCommand? MsCommandInstance
+        {
+            get => msCommand;
+            private set => msCommand = value;
+        }
 
 
         public static bool ConnectionDB()
@@ -33,8 +44,8 @@ namespace WPF_Task_Manager
             {
                 myConnect = new MySqlConnection(DBConnect);
                 myConnect.Open();
-                msCommand = new MySqlCommand() { Connection = myConnect };
-                msDataAdapter = new MySqlDataAdapter(msCommand);
+                MsCommandInstance = new MySqlCommand() { Connection = myConnect };
+                MsDataAdapterInstance = new MySqlDataAdapter(msCommand);
                 Debug.WriteLine("CONNECTED TO DATABASE SUCCESSFULLY.");
                 return true;
             }
@@ -56,14 +67,14 @@ namespace WPF_Task_Manager
             return myConnect;
         }
 
-        public static async Task AddTaskToDBAsync(string taskDescription, string taskStatus, string taskType, DateTime dueDate)
+        public static async Task AddTaskToDBAsync(string taskDescription, string taskStatus, string taskType, DateTime dueDate, int importantValue)
         {
             MySqlConnection connectStatus = GetConnection();
             try
             {
                 if (connectStatus != null && connectStatus.State == ConnectionState.Open)
                 {
-                    string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType)";
+                    string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType, Important) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType, @Important)";
 
                     await using MySqlCommand cmd = new(insertQuery, connectStatus);
                     {
@@ -72,6 +83,7 @@ namespace WPF_Task_Manager
                         cmd.Parameters.AddWithValue("@DueDate", dueDate);
                         cmd.Parameters.AddWithValue("@TaskStatus", taskStatus);
                         cmd.Parameters.AddWithValue("@TaskType", taskType);
+                        cmd.Parameters.AddWithValue("@Important", importantValue);
 
                         int rowsAffected = await cmd.ExecuteNonQueryAsync();
                         Debug.WriteLine($"TASK ADDED SUCCESSFULLY. ROWS AFFECTED: {rowsAffected}");
@@ -88,7 +100,7 @@ namespace WPF_Task_Manager
             }
         }
 
-        public static async Task<List<DBOperations>> GetTasksByIdAsync(string taskType)
+        public static async Task<List<DBOperations>> GetTasksByIdAsync(string taskType, int importantValue)
         {
             List<DBOperations> tasks = [];
             MySqlConnection connectStatus = GetConnection();
@@ -98,10 +110,13 @@ namespace WPF_Task_Manager
                 {
                     string selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType";
 
+                    if (importantValue == 1) selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType OR id = @id AND Important = @Important";
+
                     await using MySqlCommand cmd = new(selectQuery, connectStatus);
                     {
                         cmd.Parameters.AddWithValue("@id", Autorization._Id);
                         cmd.Parameters.AddWithValue("@TaskType", taskType);
+                        cmd.Parameters.AddWithValue("@Important", importantValue);
 
                         await using DbDataReader dbDataReader = await cmd.ExecuteReaderAsync();
                         {
@@ -113,6 +128,7 @@ namespace WPF_Task_Manager
                                     DueDate = dbDataReader.GetDateTime("DueDate"),
                                     TaskStatus = dbDataReader.GetString("TaskStatus"),
                                     TaskType = dbDataReader.GetString("TaskType"),
+                                    Important = dbDataReader.GetInt16("Important"),
                                     Numeration = dbDataReader.GetInt32("Numeration")
                                 };
                                 tasks.Add(task);

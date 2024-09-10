@@ -26,18 +26,51 @@ namespace WPF_Task_Manager
         const double minWindowValue = 380;
         readonly SoundPlayer _soundPlayer;
         int _Numeration;
-        MainWindow? _mainWindow;
+        private string _mainColorTheme = "#5271FF";
+        public string _circleImagePath = "pack://application:,,,/Resource/circleimage-5271ff.svg";
+        string currentSection = "MyDay";
+        int importantStatus = 0;
 
         List<DBOperations> tasks = [];
+        public IReadOnlyList<DBOperations>? TasksListInstance 
+        {
+            get => tasks.AsReadOnly();
+        }
+
+        static MainWindow? _mainWindow;
+        public static MainWindow? MainWindowInstance
+        {
+            get => _mainWindow;
+            private set => _mainWindow = value;
+        }
 
         public MyDayTaskPanel()
         {
             InitializeComponent();
-
-            LabelDataSet();
-            TaskGeneration();
             _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
             _soundPlayer.LoadAsync(); // Downloading audio in the background
+
+            TaskGeneration(currentSection, 0);
+            LabelDataSet();
+
+            if (Application.Current.MainWindow is MainWindow mainWindow) _mainWindow = mainWindow;
+        }
+
+        public void UpdateSection(string mainColorTheme, string taskType, int importantValue)
+        {
+            if (new BrushConverter().ConvertFromString(mainColorTheme) is Brush brush)
+            {
+                _mainColorTheme = mainColorTheme;
+                myDay.Foreground = brush;
+                currentData.Foreground = brush;
+                focusOnYourDay.Foreground = brush;
+                addTaskLabel.Foreground = brush;
+                currentSection = taskType;
+                importantStatus = importantValue;
+            }
+            else Debug.WriteLine("Invalid color string provided.");
+            ResetTaskObjects();
+            TaskGeneration(currentSection, importantStatus);
         }
 
         private void LabelDataSet()
@@ -65,16 +98,12 @@ namespace WPF_Task_Manager
             TaskBox.Width = actualWidth + (actualWidth <= minWindowValue ? 255 : -112);
 
             // Calendar image + focus on day label
-            if (calendarImageAndTextCanvas.Visibility == Visibility.Visible)
-            {
-                double calendarImageLeft = (actualWidth / 2) + (actualWidth <= minWindowValue ? 30 : -150);
-                double calendarImageTop = (actualHeight / 2) - (actualHeight + 70);
-
-                Canvas.SetLeft(calendarImage, calendarImageLeft);
-                Canvas.SetTop(calendarImage, calendarImageTop);
-                Canvas.SetLeft(focusOnYourDay, calendarImageLeft + 45);
-                Canvas.SetTop(focusOnYourDay, calendarImageTop + 170);
-            }
+            double calendarImageLeft = (actualWidth / 2) + (actualWidth <= minWindowValue ? 30 : -150);
+            double calendarImageTop = (actualHeight / 2) - (actualHeight + 70);
+            Canvas.SetLeft(calendarImage, calendarImageLeft);
+            Canvas.SetTop(calendarImage, calendarImageTop);
+            Canvas.SetLeft(focusOnYourDay, calendarImageLeft + 20);
+            Canvas.SetTop(focusOnYourDay, calendarImageTop + 170);
 
             // Apply task image
             double applyImageLeft = actualWidth + (actualWidth <= minWindowValue ? 270 : -100);
@@ -160,14 +189,14 @@ namespace WPF_Task_Manager
             {
                 string taskDescription = TaskBox.Text;
                 string taskStatus = "Pending";
-                string taskType = "MyDay";
+                string taskType = currentSection;
                 DateTime dueDate = DateTime.Now;
 
-                await DBOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate);
+                await DBOperations.AddTaskToDBAsync(taskDescription, taskStatus, taskType, dueDate, currentSection == "Important" ? 1 : 0);
                 TaskBox.Text = string.Empty;
                 TaskBox_LostFocus(TaskBox, e);
 
-                TaskGeneration();
+                TaskGeneration(currentSection, importantStatus);
             }
         }
 
@@ -243,14 +272,16 @@ namespace WPF_Task_Manager
                 // Add a scroll lock handler
                 taskScrollViewer.PreviewMouseWheel += ScrollViewer_PreviewMouseWheel;
 
-                _mainWindow = mainWindow;
-                _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
-                _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
-                _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
+                if (_mainWindow != null)
+                {
+                    _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
+                    _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
+                    _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
 
-                _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown += DeleteBorder_PreviewMouseDown;
-                if (status) _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkPending_PreviewMouseDown;
-                else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkCompleted_PreviewMouseDown;
+                    _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown += DeleteBorder_PreviewMouseDown;
+                    if (status) _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkPending_PreviewMouseDown;
+                    else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkCompleted_PreviewMouseDown;
+                }
             }
         }
 
@@ -381,7 +412,7 @@ namespace WPF_Task_Manager
                 // Play Audio
                 using var soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
                 {
-                    Task.Run(() => _soundPlayer.Play());
+                    Task.Run(_soundPlayer.Play);
                 }
             }
             catch(Exception ex)
@@ -398,7 +429,6 @@ namespace WPF_Task_Manager
 
                 if (index >= 0)
                 {
-                    PlayCompletionSound();
                     MarkTaskAsCompleted(index);
                 }
             }
@@ -543,13 +573,13 @@ namespace WPF_Task_Manager
             };
         }
 
-        private static Border CreateCrossOutLine(double width)
+        private Border CreateCrossOutLine(double width)
         {
             return new Border
             {
                 Width = width,
                 Height = 2.5,
-                Background = new BrushConverter().ConvertFromString("#5271FF") as Brush,
+                Background = new BrushConverter().ConvertFromString(_mainColorTheme) as Brush,
                 CornerRadius = new CornerRadius(2),
             };
         }
@@ -566,13 +596,13 @@ namespace WPF_Task_Manager
             };
         }
 
-        private static SvgViewbox CreateCircleImage()
+        private SvgViewbox CreateCircleImage()
         {
             return new SvgViewbox
             {
-                Source = new Uri("pack://application:,,,/Resource/circleimage.svg"),
+                Source = new Uri(_circleImagePath),
                 Width = 34,
-                Height = 34,
+                Height = 34,    
                 IsHitTestVisible = true,
             };
         }
@@ -712,7 +742,7 @@ namespace WPF_Task_Manager
             }
         }
 
-        public void RemoveTaskByIndex()
+        private void RemoveTaskByIndex()
         {
             int index = tasks.FindIndex(t => t.Numeration == _Numeration);
 
@@ -739,14 +769,23 @@ namespace WPF_Task_Manager
                 tasks.RemoveAt(index);
                 currentTaskQuantity = tasks.Count;
 
+                if(tasks.Count == 0) calendarImageAndTextCanvas.Visibility = Visibility.Visible;
+
                 ScrollViewerScaling();
             }
         }
 
-        int currentTaskQuantity = 0;
-        public async void TaskGeneration()
+        private void ResetTaskObjects()
         {
-            tasks = await DBOperations.GetTasksByIdAsync("MyDay");
+            taskScrollViewerCanvas.Children.Clear();
+            taskObjects.Clear();
+            currentTaskQuantity = 0;
+        }
+
+        int currentTaskQuantity = 0;
+        private async void TaskGeneration(string taskType, int importantValue)
+        {
+            tasks = await DBOperations.GetTasksByIdAsync(taskType, importantValue);
 
             if (tasks.Count > 0)
             {

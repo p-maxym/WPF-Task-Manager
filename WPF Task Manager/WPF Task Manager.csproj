@@ -12,30 +12,53 @@
   <ItemGroup>
     <None Remove="6520110.png" />
     <None Remove="icons8-галочка.gif" />
+    <None Remove="Resource\arrow-5271ff.png" />
+    <None Remove="Resource\arrow-7ed957.png" />
+    <None Remove="Resource\arrow-ff5757.png" />
     <None Remove="Resource\arrow-purple-blue.png" />
     <None Remove="Resource\arrow-purple_denoiser.png" />
     <None Remove="Resource\arrow.png" />
+    <None Remove="Resource\calendar-important.png" />
+    <None Remove="Resource\calendar-important.webp" />
+    <None Remove="Resource\calendarImportant.png" />
+    <None Remove="Resource\cart-icon.svg" />
     <None Remove="Resource\check.png" />
     <None Remove="Resource\check.svg" />
     <None Remove="Resource\circle-check.svg" />
     <None Remove="Resource\circle.png" />
+    <None Remove="Resource\circleimage-5271ff.svg" />
+    <None Remove="Resource\circleimage-7ed957.svg" />
+    <None Remove="Resource\circleimage-ff5757.svg" />
     <None Remove="Resource\circleimage.svg" />
     <None Remove="Resource\circleimage2.png" />
     <None Remove="Resource\circleimage2.svg" />
+    <None Remove="Resource\clear-sky.png" />
     <None Remove="Resource\delete-bucket.svg" />
     <None Remove="Resource\dots3.svg" />
     <None Remove="Resource\doublesquare.png" />
     <None Remove="Resource\free-icon-verify-83.png" />
-    <None Remove="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" />
     <None Remove="Resource\grey-circle.svg" />
+    <None Remove="Resource\important-icon.png" />
+    <None Remove="Resource\list-icon.svg" />
+    <None Remove="Resource\myday-calendar.png" />
+    <None Remove="Resource\plus-5271ff.svg" />
+    <None Remove="Resource\plus-7ed957.svg" />
+    <None Remove="Resource\plus-FF5757.svg" />
     <None Remove="Resource\plus.png" />
     <None Remove="Resource\plus.svg" />
     <None Remove="Resource\sampling_method.png" />
     <None Remove="Resource\servant-bell-ring.wav" />
     <None Remove="Resource\servantbellring.wav" />
+    <None Remove="Resource\shopping-basket.png" />
     <None Remove="Resource\squareround.png" />
+    <None Remove="Resource\star-icon.svg" />
     <None Remove="Resource\star-sharp.svg" />
+    <None Remove="Resource\star.png" />
+    <None Remove="Resource\supermarket-shopping.png" />
+    <None Remove="Resource\trace.svg" />
     <None Remove="Resource\wait-time.svg" />
+    <None Remove="Resource\weather-icon.png" />
+    <None Remove="Resource\weather-icon.svg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,14 +69,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resource\arrow-purple-blue.png">
+    <Resource Include="Resource\arrow-5271ff.png" />
+    <Resource Include="Resource\arrow-7ed957.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\arrow-ff5757.png" />
+    <Resource Include="Resource\calendarImportant.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\cart-icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\check.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\circle-check.svg" />
-    <Resource Include="Resource\circleimage.svg">
+    <Resource Include="Resource\circleimage-5271ff.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\circleimage-7ed957.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\circleimage-ff5757.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\delete-bucket.svg">
@@ -66,20 +103,40 @@
     <Resource Include="Resource\free-icon-verify-83.png">
       <CopyToOutputDirectory></CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Resource\freepik-export-202407112205028bsk_Nero AI_image_denoiser.png">
+    <Resource Include="Resource\myday-calendar.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\grey-circle.svg">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\icons8-галочка.gif" />
-    <Resource Include="Resource\plus.svg" />
+    <Resource Include="Resource\list-icon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Content Include="Resource\servant-bell-ring.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resource\plus-5271ff.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\plus-7ed957.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\plus-FF5757.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\squareround.png" />
     <Resource Include="Resource\star-sharp.svg" />
+    <Resource Include="Resource\supermarket-shopping.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\trace.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\wait-time.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\weather-icon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

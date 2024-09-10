@@ -21,7 +21,7 @@
                                     <Thumb>
                                         <Thumb.Template>
                                             <ControlTemplate TargetType="Thumb">
-                                                <Border Background="DarkGray" CornerRadius="6" Width="10"/>
+                                                <Border Background="DarkGray" CornerRadius="3" Width="8"/>
                                             </ControlTemplate>
                                         </Thumb.Template>
                                     </Thumb>
@@ -42,13 +42,15 @@
                     <TextBox Padding="42,18,0,0" Width="499" Background="#343434" BorderThickness="0" Canvas.Left="16" FontSize="17" Foreground="White" FontWeight="SemiBold" Height="60" x:Name="TaskBox" GotFocus="TaskBox_GotFocus" LostFocus="TaskBox_LostFocus"
                              HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="TaskBox_TextChanged" KeyDown="TaskBox_KeyDown"/>
                     <Label Content="Add a task" Foreground="#5271FF" FontSize="17" FontWeight="SemiBold" x:Name="addTaskLabel" Canvas.Left="56" Canvas.Top="14" IsHitTestVisible="False"/>
-                    <svgc:SvgViewbox Source="Resource/circleimage.svg" x:Name="circleImage" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
-                    <svgc:SvgViewbox x:Name="plusImage" Source="Resource/plus.svg" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False"/>
+                    <svgc:SvgViewbox Source="Resource/circleimage-5271ff.svg" x:Name="circleImage" Height="34" Width="34" Canvas.Left="11" Canvas.Top="13" IsHitTestVisible="False"/>
+                    <svgc:SvgViewbox x:Name="plusImage" Source="Resource/plus-5271ff.svg" Height="24" Width="24" Canvas.Left="16" Canvas.Top="18" IsHitTestVisible="False">
+                       
+                    </svgc:SvgViewbox>
                     <Label x:Name="myDay" Content="My Day" Foreground="#5271FF" FontWeight="Bold"/>
                     <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
                     <Canvas x:Name="calendarImageAndTextCanvas">
-                        <Image x:Name="calendarImage" Source="Resource/freepik-export-202407112205028bsk_Nero AI_image_denoiser.png" Width="266" Height="199"/>
-                        <Label Content="Focus on your day" Foreground="#5271FF" FontSize="20" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
+                        <Image x:Name="calendarImage" Source="Resource/myday-calendar.png" Width="266" Height="199"/>
+                        <Label Content="Focus on your day" Foreground="#5271FF" FontSize="25" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
                     </Canvas>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="taskScrollViewer">
@@ -60,7 +62,7 @@
                         </StackPanel>
                     </ScrollViewer>
 
-                    <Image x:Name="applyImage" Source="Resource/arrow-purple-blue.png" Visibility="Collapsed" PreviewMouseDown="ApplyImage_PreviewMouseDown"/>
+                    <Image x:Name="applyImage" Source="Resource/arrow-5271ff.png" Visibility="Collapsed" PreviewMouseDown="ApplyImage_PreviewMouseDown"/>
                 </Canvas>
             </Grid>
         </Border>
