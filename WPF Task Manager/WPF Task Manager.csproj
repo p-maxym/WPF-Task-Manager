@@ -12,6 +12,8 @@
   <ItemGroup>
     <None Remove="6520110.png" />
     <None Remove="icons8-галочка.gif" />
+    <None Remove="Resource\3d-blank.png" />
+    <None Remove="Resource\arrow-4fb5dc.png" />
     <None Remove="Resource\arrow-5271ff.png" />
     <None Remove="Resource\arrow-7ed957.png" />
     <None Remove="Resource\arrow-ff5757.png" />
@@ -26,6 +28,7 @@
     <None Remove="Resource\check.svg" />
     <None Remove="Resource\circle-check.svg" />
     <None Remove="Resource\circle.png" />
+    <None Remove="Resource\circleimage-4fb5dc.svg" />
     <None Remove="Resource\circleimage-5271ff.svg" />
     <None Remove="Resource\circleimage-7ed957.svg" />
     <None Remove="Resource\circleimage-ff5757.svg" />
@@ -40,7 +43,9 @@
     <None Remove="Resource\grey-circle.svg" />
     <None Remove="Resource\important-icon.png" />
     <None Remove="Resource\list-icon.svg" />
+    <None Remove="Resource\management-todo-check.png" />
     <None Remove="Resource\myday-calendar.png" />
+    <None Remove="Resource\plus-4fb5dc.svg" />
     <None Remove="Resource\plus-5271ff.svg" />
     <None Remove="Resource\plus-7ed957.svg" />
     <None Remove="Resource\plus-FF5757.svg" />
@@ -69,6 +74,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resource\3d-blank.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\arrow-4fb5dc.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\arrow-5271ff.png" />
     <Resource Include="Resource\arrow-7ed957.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -84,6 +95,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\circle-check.svg" />
+    <Resource Include="Resource\circleimage-4fb5dc.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\circleimage-5271ff.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -116,6 +130,9 @@
     <Content Include="Resource\servant-bell-ring.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Resource\plus-4fb5dc.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resource\plus-5271ff.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>

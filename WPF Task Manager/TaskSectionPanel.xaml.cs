@@ -52,85 +52,57 @@ namespace WPF_Task_Manager
             }
         }
 
-        public void MyDayBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void UpdateSectionUI(string colorTheme, string header, string imagePrefix, string content, string calendarImagePath, double calendarWidth, double calendarHeight, Thickness calendarMargin)
         {
             var md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
             if (md != null)
             {
                 try
                 {
-                    SectionOpened(sender);
-                    md.UpdateSection("#5271ff", "MyDay", 0);
-                    md.focusOnYourDay.Content = "Focus on your day";
-                    md.myDay.Content = "My Day";
-                    md.plusImage.Source = new Uri("pack://application:,,,/Resource/plus-5271ff.svg");
-                    md.circleImage.Source = new Uri("pack://application:,,,/Resource/circleimage-5271ff.svg");
-                    md._circleImagePath = "pack://application:,,,/Resource/circleimage-5271ff.svg";
-                    md.calendarImage.Source = new BitmapImage(new Uri("Resource/myday-calendar.png", UriKind.RelativeOrAbsolute));
-                    md.calendarImage.Width = 266;
-                    md.calendarImage.Height = 199;
-                    md.calendarImage.Margin = new(0);
-                    md.applyImage.Source = new BitmapImage(new Uri("Resource/arrow-5271ff.png", UriKind.RelativeOrAbsolute));
+                    md.UpdateSection(colorTheme, header, 0);
+                    md.focusOnYourDay.Content = content;
+                    md.myDay.Content = header;
+                    md.plusImage.Source = new Uri($"pack://application:,,,/Resource/plus-{imagePrefix}.svg");
+                    md.circleImage.Source = new Uri($"pack://application:,,,/Resource/circleimage-{imagePrefix}.svg");
+                    md._circleImagePath = $"pack://application:,,,/Resource/circleimage-{imagePrefix}.svg";
+                    md.calendarImage.Source = new BitmapImage(new Uri(calendarImagePath, UriKind.RelativeOrAbsolute));
+                    md.calendarImage.Width = calendarWidth;
+                    md.calendarImage.Height = calendarHeight;
+                    md.calendarImage.Margin = calendarMargin;
+                    md.applyImage.Source = new BitmapImage(new Uri($"Resource/arrow-{imagePrefix}.png", UriKind.RelativeOrAbsolute));
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
             }
+        }
+        public void MyDayBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SectionOpened(sender);
+            Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
+            UpdateSectionUI("#5271ff", "My Day", "5271ff", "       For Today", "Resource/myday-calendar.png", 266, 199, new Thickness(0));
         }
 
         public void ImportantBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
-            if (md != null)
-            {
-                try
-                {
-                    SectionOpened(sender);
-                    md.UpdateSection("#ff5757", "Important", 1);
-                    md.focusOnYourDay.Content = "       Take Note";
-                    md.myDay.Content = "Important";
-                    md.plusImage.Source = new Uri("pack://application:,,,/Resource/plus-FF5757.svg");
-                    md.circleImage.Source = new Uri("pack://application:,,,/Resource/circleimage-FF5757.svg");
-                    md._circleImagePath = "pack://application:,,,/Resource/circleimage-FF5757.svg";
-                    md.calendarImage.Source = new BitmapImage(new Uri("Resource/calendarImportant.png", UriKind.RelativeOrAbsolute));
-                    md.calendarImage.Width = 250;
-                    md.calendarImage.Height = 140;
-                    md.calendarImage.Margin = new(10,30,30,20);
-                    md.applyImage.Source = new BitmapImage(new Uri("Resource/arrow-ff5757.png", UriKind.RelativeOrAbsolute));
-                }
-                catch(Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
+            SectionOpened(sender);
+            Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
+            UpdateSectionUI("#ff5757", "Important", "FF5757", "       Take Note", "Resource/calendarImportant.png", 250, 140, new Thickness(10, 30, 30, 20));
         }
 
         public void GroceriesBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
-            if (md != null)
-            {
-                try
-                {
-                    SectionOpened(sender);
-                    md.UpdateSection("#7ed957", "Groceries", 0);
-                    md.focusOnYourDay.Content = "          To Eat";
-                    md.myDay.Content = "Groceries";
-                    md.plusImage.Source = new Uri("pack://application:,,,/Resource/plus-7ed957.svg");
-                    md.circleImage.Source = new Uri("pack://application:,,,/Resource/circleimage-7ed957.svg");
-                    md._circleImagePath = "pack://application:,,,/Resource/circleimage-7ed957.svg";
-                    md.calendarImage.Source = new BitmapImage(new Uri("Resource/supermarket-shopping.png", UriKind.RelativeOrAbsolute));
-                    md.calendarImage.Width = 250;
-                    md.calendarImage.Height = 160;
-                    md.calendarImage.Margin = new(7, 15, 0, 20);
-                    md.applyImage.Source = new BitmapImage(new Uri("Resource/arrow-7ed957.png", UriKind.RelativeOrAbsolute));
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
+            SectionOpened(sender);
+            Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
+            UpdateSectionUI("#7ed957", "Groceries", "7ed957", "          To Eat", "Resource/supermarket-shopping.png", 250, 160, new Thickness(7, 15, 0, 20));
+        }
+
+        public void TasksBorder_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            SectionOpened(sender);
+            Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
+            UpdateSectionUI("#4fb5dc", "Tasks", "4fb5dc", "          To Do", "Resource/3d-blank.png", 270, 140, new Thickness(5, 30, 0, 0));
         }
     }
 }

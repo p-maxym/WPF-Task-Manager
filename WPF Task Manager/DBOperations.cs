@@ -110,7 +110,8 @@ namespace WPF_Task_Manager
                 {
                     string selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType";
 
-                    if (importantValue == 1) selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType OR id = @id AND Important = @Important";
+                    if(taskType == "Tasks" ) selectQuery = "SELECT * FROM tasks WHERE id = @id";
+                    else if (importantValue == 1) selectQuery = "SELECT * FROM tasks WHERE id = @id AND TaskType = @TaskType OR id = @id AND Important = @Important";
 
                     await using MySqlCommand cmd = new(selectQuery, connectStatus);
                     {

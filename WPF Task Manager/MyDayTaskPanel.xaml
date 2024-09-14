@@ -50,7 +50,7 @@
                     <Label x:Name="currentData" Content="Now, now 00" Foreground="#5271FF" FontWeight="Bold"/>
                     <Canvas x:Name="calendarImageAndTextCanvas">
                         <Image x:Name="calendarImage" Source="Resource/myday-calendar.png" Width="266" Height="199"/>
-                        <Label Content="Focus on your day" Foreground="#5271FF" FontSize="25" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
+                        <Label Content="       For Today" Foreground="#5271FF" FontSize="25" FontWeight="Bold" x:Name="focusOnYourDay" Canvas.Left="56" Canvas.Top="14"/>
                     </Canvas>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="taskScrollViewer">
