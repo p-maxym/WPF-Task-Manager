@@ -23,7 +23,8 @@ namespace WPF_Task_Manager
     partial class MyDayTaskPanel : UserControl
     {
         double _mainWindowActualWidth, _mainWindowActualHeight;
-        const double minWindowValue = 380;
+        readonly double minWindowValue = 380;
+        readonly int delayValue = 200;
         readonly SoundPlayer _soundPlayer;
         int _Numeration;
         private string _mainColorTheme = "#5271FF";
@@ -201,6 +202,9 @@ namespace WPF_Task_Manager
                 TaskBox_LostFocus(TaskBox, e);
 
                 TaskGeneration(currentSection, importantStatus);
+
+                await Task.Delay(delayValue);
+                if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
             }
         }
 
@@ -330,6 +334,9 @@ namespace WPF_Task_Manager
         {
             await DBOperations.DeleteTask(_Numeration);
             RemoveTaskByIndex();
+
+            await Task.Delay(delayValue);
+            if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
         }
         private void TaskSettingsMarkPending_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -370,6 +377,8 @@ namespace WPF_Task_Manager
                 await DBOperations.MarkTaskAsCompleted(tasks[index].Numeration);
                 PlayCompletionSound();
                 tasks[index].TaskStatus = "Completed";
+                await Task.Delay(delayValue);
+                if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
             }
 
             ClearCrossOut(index);
@@ -391,6 +400,10 @@ namespace WPF_Task_Manager
         private async void MarkTaskAsPending(int index)
         {
             await DBOperations.MarkTaskAsPending(tasks[index].Numeration);
+
+            await Task.Delay(delayValue);
+            if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
+
             SvgViewbox image = taskObjects[index].Item4;
 
             image.Source = new Uri("pack://application:,,,/Resource/wait-time.svg");

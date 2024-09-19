@@ -15,11 +15,46 @@ namespace WPF_Task_Manager
     partial class TaskSectionPanel : UserControl
     {
         readonly List<Border> borderList = [];
-        MyDayTaskPanel? md;
         public TaskSectionPanel()
         {
             InitializeComponent();
             borderList = [myDayBorder, myDayBorderCheck, importantBorder, importantBorderCheck, groceriesBorder, groceriesBorderCheck, tasksBorder, tasksBorderCheck];
+            Loaded += TaskSectionPanel_Loaded;
+        }
+
+        private async void TaskSectionPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            await AllPendingTasksCount();
+        }
+
+        public async Task AllPendingTasksCount()
+        {
+            List<DBOperations> allTasks = await DBOperations.GetTasksByIdAsync("Tasks", 0);
+
+            var taskCounts = allTasks.GroupBy(task => task.TaskType ?? string.Empty)
+        .Where(group => group.Key == "MyDay" || group.Key == "Important" || group.Key == "Groceries" || group.Key == "Tasks")
+        .ToDictionary(group => group.Key, group => group.Count(task => task.TaskStatus == "Pending"));
+
+            // Обновление UI
+            MyDayCountBorder.Visibility = taskCounts.TryGetValue("MyDay", out int myDayCount) && myDayCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+
+            MyDayCount.Text = myDayCount > 0 ? myDayCount.ToString() : "";
+
+            ImportantCountBorder.Visibility = taskCounts.TryGetValue("Important", out int importantCount) && importantCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+
+            ImportantCount.Text = importantCount > 0 ? importantCount.ToString() : "";
+
+            GroceriesCountBorder.Visibility = taskCounts.TryGetValue("Groceries", out int groceriesCount) && groceriesCount > 0
+                ? Visibility.Visible : Visibility.Collapsed;
+
+            GroceriesCount.Text = groceriesCount > 0 ? groceriesCount.ToString() : "";
+
+            // Общий счет задач
+            int allTasksCount = taskCounts.Values.Sum();
+            TasksCountBorder.Visibility = allTasksCount > 0 ? Visibility.Visible : Visibility.Collapsed;
+            TasksCount.Text = allTasksCount > 0 ? allTasksCount.ToString() : "";
         }
 
         public void TaskSectionPanelResize(double actualWidth, double actualHeight)
@@ -48,9 +83,9 @@ namespace WPF_Task_Manager
             }
         }
 
-        private void UpdateSectionUI(string colorTheme, string header, string imagePrefix, string content, string calendarImagePath, double calendarWidth, double calendarHeight, Thickness calendarMargin)
+        private static void UpdateSectionUI(string colorTheme, string header, string imagePrefix, string content, string calendarImagePath, double calendarWidth, double calendarHeight, Thickness calendarMargin)
         {
-            md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
+            MyDayTaskPanel? md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
             if (md != null)
             {
                 try
@@ -100,7 +135,5 @@ namespace WPF_Task_Manager
             Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
             UpdateSectionUI("#4fb5dc", "Tasks", "4fb5dc", "          To Do", "Resource/3d-blank.png", 270, 140, new Thickness(5, 30, 0, 0));
         }
-
-
     }
 }

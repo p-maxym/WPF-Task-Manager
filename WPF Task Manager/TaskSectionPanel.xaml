@@ -46,17 +46,23 @@
                     <TextBlock Text="My Day" Foreground="White" Margin="-90,-52,0,0" FontSize="22" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
                     <svgc:SvgViewbox Source="Resource/weather-icon.svg" Width="30" Height="30" Margin="-260,-50,0,0" IsHitTestVisible="False"/>
                     <Border x:Name="myDayBorderCheck" Width="6" Height="25" CornerRadius="3" Background="#4440DC" Margin="-314,-50,0,0" IsHitTestVisible="False"/>
+                    <Border x:Name="MyDayCountBorder" Width="20" Height="20" CornerRadius="20" Background="#9FA1A2" Margin="270,-50,0,0" Visibility="Visible" IsHitTestVisible="False"/>
+                    <TextBlock x:Name="MyDayCount" Foreground="Black" FontSize="16" Width="16" Text="5" Height="24" Margin="278,-45,0,0" FontFamily="Impact" FontWeight="Light" IsHitTestVisible="False"/>
 
 
                     <Border x:Name="importantBorder" Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,20,0,0" PreviewMouseDown="ImportantBorder_PreviewMouseDown" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="Important" Foreground="White" Margin="-90,-52,0,0" FontSize="22" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
                     <svgc:SvgViewbox Source="Resource/trace.svg" Width="28" Height="28" Margin="-260,-50,0,0" IsHitTestVisible="False"/>
                     <Border x:Name="importantBorderCheck" Visibility="Collapsed" Width="6" Height="25" CornerRadius="3" Background="#4440DC" Margin="-314,-50,0,0" IsHitTestVisible="False"/>
+                    <Border x:Name="ImportantCountBorder" Width="20" Height="20" CornerRadius="20" Background="#9FA1A2" Margin="270,-50,0,0" Visibility="Visible" IsHitTestVisible="False"/>
+                    <TextBlock x:Name="ImportantCount" Foreground="Black" Text="1" FontSize="16" Width="16" Height="24" Margin="278,-45,0,0" FontFamily="Impact" FontWeight="Light" IsHitTestVisible="False"/>
 
                     <Border x:Name="groceriesBorder" Width="320" Height="50" CornerRadius="15" Background="#343434" Margin="0,20,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" PreviewMouseDown="GroceriesBorder_PreviewMouseDown"/>
                     <TextBlock Text="Groceries" Foreground="White" Margin="-90,-52,0,0" FontSize="22" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
                     <svgc:SvgViewbox Source="Resource/cart-icon.svg" Width="30" Height="30" Margin="-260,-50,0,0" IsHitTestVisible="False"/>
                     <Border x:Name="groceriesBorderCheck" Visibility="Collapsed" Width="6" Height="25" CornerRadius="3" Background="#4440DC" Margin="-314,-50,0,0" IsHitTestVisible="False"/>
+                    <Border x:Name="GroceriesCountBorder" Width="20" Height="20" CornerRadius="20" Background="#9FA1A2" Margin="270,-50,0,0" Visibility="Collapsed" IsHitTestVisible="False"/>
+                    <TextBlock x:Name="GroceriesCount" Foreground="Black" FontSize="16" Width="16" Height="24" Margin="278,-45,0,0" FontFamily="Impact" FontWeight="Light" IsHitTestVisible="False"/>
 
                     <Border Width="270" Height="2" CornerRadius="2" Background="White" Margin="0,30,0,0"/>
 
@@ -64,7 +70,9 @@
                     <TextBlock Text="Tasks" Foreground="White" Margin="-90,-72,0,0" FontSize="22" FontWeight="Bold" Height="30" Width="115" IsHitTestVisible="False"/>
                     <svgc:SvgViewbox Source="Resource/list-icon.svg" Width="30" Height="30" Margin="-260,-67,0,0" IsHitTestVisible="False"/>
                     <Border x:Name="tasksBorderCheck" Visibility="Collapsed" Width="6" Height="25" CornerRadius="3" Background="#4440DC" Margin="-314,-67,0,0" IsHitTestVisible="False"/>
-            </StackPanel>
+                    <Border x:Name="TasksCountBorder" Width="20" Height="20" CornerRadius="20" Background="#9FA1A2" Margin="270,-70,0,0" Visibility="Collapsed" IsHitTestVisible="False"/>
+                    <TextBlock x:Name="TasksCount" Foreground="Black" FontSize="16" Width="16" Height="24" Margin="278,-65,0,0" FontFamily="Impact" FontWeight="Light" IsHitTestVisible="False"/>
+                </StackPanel>
             </ScrollViewer>
         </Border>
     </Canvas>
