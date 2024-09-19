@@ -15,6 +15,7 @@ namespace WPF_Task_Manager
     partial class TaskSectionPanel : UserControl
     {
         readonly List<Border> borderList = [];
+        MyDayTaskPanel? md;
         public TaskSectionPanel()
         {
             InitializeComponent();
@@ -36,30 +37,25 @@ namespace WPF_Task_Manager
 
         private void SectionOpened(object sender)
         {
-            for(int i = 0; i < borderList.Count; i+=2)
+            Brush selectedBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#727272"));
+            Brush defaultBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#343434"));
+
+            for (int i = 0; i < borderList.Count; i += 2)
             {
                 Border border = borderList[i];
-                if (border == sender)
-                {
-                    border.Background = new BrushConverter().ConvertFromString("#727272") as Brush;
-                    borderList[i + 1].Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    border.Background = new BrushConverter().ConvertFromString("#343434") as Brush;
-                    borderList[i + 1].Visibility = Visibility.Collapsed;
-                }
+                border.Background = border == sender ? selectedBrush : defaultBrush;
+                borderList[i + 1].Visibility = border == sender ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
         private void UpdateSectionUI(string colorTheme, string header, string imagePrefix, string content, string calendarImagePath, double calendarWidth, double calendarHeight, Thickness calendarMargin)
         {
-            var md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
+            md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
             if (md != null)
             {
                 try
                 {
-                    md.UpdateSection(colorTheme, header, 0);
+                    md.UpdateSection(colorTheme, header.Replace(" ", ""), 0);
                     md.focusOnYourDay.Content = content;
                     md.myDay.Content = header;
                     md.plusImage.Source = new Uri($"pack://application:,,,/Resource/plus-{imagePrefix}.svg");
@@ -104,5 +100,7 @@ namespace WPF_Task_Manager
             Application.Current.Dispatcher.Invoke(System.Windows.Threading.DispatcherPriority.Render, () => { });
             UpdateSectionUI("#4fb5dc", "Tasks", "4fb5dc", "          To Do", "Resource/3d-blank.png", 270, 140, new Thickness(5, 30, 0, 0));
         }
+
+
     }
 }

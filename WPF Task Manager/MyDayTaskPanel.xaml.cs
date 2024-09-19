@@ -32,10 +32,9 @@ namespace WPF_Task_Manager
         int importantStatus = 0;
 
         List<DBOperations> tasks = [];
-        public IReadOnlyList<DBOperations>? TasksListInstance 
-        {
-            get => tasks.AsReadOnly();
-        }
+
+        //tasks borders list for scaling
+        readonly List<(Border, TextBlock, SvgViewbox, SvgViewbox, Border, SvgViewbox, List<Border>)> taskObjects = [];
 
         static MainWindow? _mainWindow;
         public static MainWindow? MainWindowInstance
@@ -86,33 +85,38 @@ namespace WPF_Task_Manager
             _mainWindowActualWidth = actualWidth;
             _mainWindowActualHeight = actualHeight;
 
+            bool isSmallWindow = actualWidth <= minWindowValue;
+
             // Main border resize
-            TaskPanelBorder.Width = actualWidth + (actualWidth <= minWindowValue ? 370 : 4);
+            TaskPanelBorder.Width = actualWidth + (isSmallWindow ? 370 : 4);
             TaskPanelBorder.Height = actualHeight - 2;
 
             // Border content resize
-            double marginLeft = actualWidth <= minWindowValue ? 25 : 395;
-
+            double marginLeft = isSmallWindow ? 25 : 395;
             TaskPanelBorder.Margin = new Thickness(marginLeft, 12, 21, 25);
-            TaskBorder.Width = actualWidth + (actualWidth <= minWindowValue ? 320 : -47);
-            TaskBox.Width = actualWidth + (actualWidth <= minWindowValue ? 255 : -112);
+
+            TaskBorder.Width = actualWidth + (isSmallWindow ? 320 : -47);
+            TaskBox.Width = actualWidth + (isSmallWindow ? 255 : -112);
 
             // Calendar image + focus on day label
-            double calendarImageLeft = (actualWidth / 2) + (actualWidth <= minWindowValue ? 30 : -150);
+            double calendarImageLeft = (actualWidth / 2) + (isSmallWindow ? 30 : -150);
             double calendarImageTop = (actualHeight / 2) - (actualHeight + 70);
             Canvas.SetLeft(calendarImage, calendarImageLeft);
             Canvas.SetTop(calendarImage, calendarImageTop);
-            Canvas.SetLeft(focusOnYourDay, calendarImageLeft + 20);
-            Canvas.SetTop(focusOnYourDay, calendarImageTop + 170);
+
+            // Focus on day label
+            double focusOnDayLeft = calendarImageLeft + 20;
+            double focusOnDayTop = calendarImageTop + 170;
+            Canvas.SetLeft(focusOnYourDay, focusOnDayLeft);
+            Canvas.SetTop(focusOnYourDay, focusOnDayTop);
 
             // Apply task image
-            double applyImageLeft = actualWidth + (actualWidth <= minWindowValue ? 270 : -100);
-            double applyImageTop = actualHeight - (actualHeight - 5);
-
+            double applyImageLeft = actualWidth + (isSmallWindow ? 270 : -100);
+            double applyImageTop = 5;
             Canvas.SetLeft(applyImage, applyImageLeft);
             Canvas.SetTop(applyImage, applyImageTop);
 
-            //Data label scaling func call
+            // Data label scaling func call
             DataLabelScaling();
             // ScrollViewer + tasks scaling func call
             ScrollViewerScaling();
@@ -434,7 +438,7 @@ namespace WPF_Task_Manager
             }
         }
 
-        public void ScrollViewerScaling()
+        private void ScrollViewerScaling()
         {
             double taskScrollViewerTop = _mainWindowActualHeight <= 550 ? -(_mainWindowActualHeight) / 1.54 : -(_mainWindowActualHeight) / 1.3;
             double topCorrection = 90;
@@ -474,27 +478,28 @@ namespace WPF_Task_Manager
         private void TasksScaling(double topCorrection)
         {
             double allTasksHeight = 0;
-            // Tasks Borders + Lables
+            double width = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 320 : -47);
+            double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 305 : -65);
+
+            // Tasks Borders + Labels
             using (Dispatcher.DisableProcessing())
             {
                 for (int i = 0; i < currentTaskQuantity; i++)
                 {
                     var taskObject = taskObjects[i];
 
-                    double width = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 320 : -47);
-                    double top = GetTaskTopPosition(i) - topCorrection;
-                    double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 305 : -65);
-
-                    // Text optimization
                     if (taskObject.Item2.Text is string contentText)
                     {
                         string cleanedText = contentText.Replace("\n", "");
-                        taskObject.Item2.Text = CheckTextLength(cleanedText);
+                        if (taskObject.Item2.Text != cleanedText) taskObject.Item2.Text = CheckTextLength(cleanedText);
                     }
 
-                    // Set dimensions and positions
-                    taskObject.Item1.Width = width;
-                    taskObject.Item1.Height = lastTaskHeight;
+                    double top = GetTaskTopPosition(i) - topCorrection;
+
+                    if (taskObject.Item1.Width != width) taskObject.Item1.Width = width;
+
+                    if (taskObject.Item1.Height != lastTaskHeight) taskObject.Item1.Height = lastTaskHeight;
+
                     Canvas.SetTop(taskObject.Item1, top - 12);
                     Canvas.SetTop(taskObject.Item2, top + 5);
                     Canvas.SetTop(taskObject.Item3, top);
@@ -504,7 +509,6 @@ namespace WPF_Task_Manager
                     Canvas.SetLeft(taskObject.Item6, dotsLeft);
                     Canvas.SetTop(taskObject.Item6, top + 5);
 
-                    // Add new cross out lines if the task is completed
                     if (tasks[i].TaskStatus == "Completed")
                     {
                         ClearCrossOut(i);
@@ -517,22 +521,20 @@ namespace WPF_Task_Manager
                 }
             }
 
-            taskStackPanel.Height = allTasksHeight > taskScrollViewer.Height ? allTasksHeight : taskScrollViewer.Height;
+            if (taskStackPanel.Height != allTasksHeight && allTasksHeight > taskScrollViewer.Height) taskStackPanel.Height = allTasksHeight;
+            else if (taskStackPanel.Height != taskScrollViewer.Height) taskStackPanel.Height = taskScrollViewer.Height;
         }
-
-        //tasks borders list for scaling
-        readonly List<(Border, TextBlock, SvgViewbox, SvgViewbox, Border, SvgViewbox, List<Border>)> taskObjects = [];
 
         // The main function that adds a task
         private void AddTaskToScrollViewer(string labelText)
         {
             // Creating controls
-            var newBorder = CreateTaskBorder();
-            var newTextBlock = CreateTaskText(labelText);
-            var newCircleImage = CreateCircleImage();
-            var newTimeImage = CreateTimeImage();
-            var dotsHitbox = CreateDotsHitbox();
-            var threeDotsImage = CreateThreeDotsImage();
+            Border newBorder = CreateTaskBorder();
+            TextBlock newTextBlock = CreateTaskText(labelText);
+            SvgViewbox newCircleImage = CreateCircleImage();
+            SvgViewbox newTimeImage = CreateTimeImage();
+            Border dotsHitbox = CreateDotsHitbox();
+            SvgViewbox threeDotsImage = CreateThreeDotsImage();
 
 
             // Linking events
@@ -642,30 +644,32 @@ namespace WPF_Task_Manager
         }
 
         // Element positioning function
-        private void PositionTaskElements(Border newBorder, TextBlock newTextBlock, SvgViewbox newCircleImage, SvgViewbox newTimeImage, Border dotsHitbox, 
-            SvgViewbox threeDotsImage)
-        {   
-            double left = _mainWindowActualWidth - (_mainWindowActualWidth - 100);
+        private void PositionTaskElements(Border newBorder, TextBlock newTextBlock, SvgViewbox newCircleImage, SvgViewbox newTimeImage, Border dotsHitbox, SvgViewbox threeDotsImage)
+        {
+            double left = 100;
             double top = GetTaskTopPosition(currentTaskQuantity);
             double dotsLeft = _mainWindowActualWidth + (_mainWindowActualWidth <= minWindowValue ? 305 : -65);
 
-            Canvas.SetLeft(newBorder, left - 75);
-            Canvas.SetTop(newBorder, top - 12);
+            using (Dispatcher.DisableProcessing())
+            {
+                Canvas.SetLeft(newBorder, left - 75);
+                Canvas.SetTop(newBorder, top - 12);
 
-            Canvas.SetLeft(newTextBlock, left - 15);
-            Canvas.SetTop(newTextBlock, top);
+                Canvas.SetLeft(newTextBlock, left - 15);
+                Canvas.SetTop(newTextBlock, top);
 
-            Canvas.SetLeft(newCircleImage, left - 65);
-            Canvas.SetTop(newCircleImage, top);
+                Canvas.SetLeft(newCircleImage, left - 65);
+                Canvas.SetTop(newCircleImage, top);
 
-            Canvas.SetLeft(newTimeImage, left - 55.5);
-            Canvas.SetTop(newTimeImage, top + 10);
+                Canvas.SetLeft(newTimeImage, left - 55.5);
+                Canvas.SetTop(newTimeImage, top + 10);
 
-            Canvas.SetLeft(dotsHitbox, dotsLeft);
-            Canvas.SetTop(dotsHitbox, top);
+                Canvas.SetLeft(dotsHitbox, dotsLeft);
+                Canvas.SetTop(dotsHitbox, top);
 
-            Canvas.SetLeft(threeDotsImage, dotsLeft);
-            Canvas.SetTop(threeDotsImage, top);
+                Canvas.SetLeft(threeDotsImage, dotsLeft);
+                Canvas.SetTop(threeDotsImage, top);
+            }
         }
 
         double lastTaskHeight;
@@ -704,23 +708,25 @@ namespace WPF_Task_Manager
         private List<Border> AddCrossOut(TextBlock taskTextBlock, double top, double borderWidth)
         {
             List<Border> crossOutLines = [];
+
             double left = Canvas.GetLeft(taskTextBlock) - 5;
             double lineHeight = 22.5;
-
             double currentTop = top + 10;
 
-            int numberOfLines = taskTextBlock.Text.Split('\n').Length;
+            string[] lines = taskTextBlock.Text.Split('\n');
+            int numberOfLines = lines.Length;
+
+            double lineWidth = borderWidth * 0.90 - 85;
 
             for (int i = 0; i < numberOfLines; i++)
             {
-                // Add a strikethrough line for each line of text
-                Border crossOutLine = CreateCrossOutLine(borderWidth * 0.90 - 85);
-
-                taskScrollViewerCanvas.Children.Add(crossOutLine);
-                crossOutLines.Add(crossOutLine);
+                Border crossOutLine = CreateCrossOutLine(lineWidth);
 
                 Canvas.SetTop(crossOutLine, currentTop);
                 Canvas.SetLeft(crossOutLine, left);
+
+                taskScrollViewerCanvas.Children.Add(crossOutLine);
+                crossOutLines.Add(crossOutLine);
 
                 currentTop += lineHeight;
             }
