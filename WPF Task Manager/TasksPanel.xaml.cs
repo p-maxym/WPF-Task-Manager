@@ -20,7 +20,7 @@ using System.Runtime.CompilerServices;
 
 namespace WPF_Task_Manager
 {
-    partial class MyDayTaskPanel : UserControl
+    partial class TasksPanel : UserControl
     {
         double _mainWindowActualWidth, _mainWindowActualHeight;
         readonly double minWindowValue = 380;
@@ -44,7 +44,7 @@ namespace WPF_Task_Manager
             private set => _mainWindow = value;
         }
 
-        public MyDayTaskPanel()
+        public TasksPanel()
         {
             InitializeComponent();
             _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
@@ -377,8 +377,6 @@ namespace WPF_Task_Manager
                 await DBOperations.MarkTaskAsCompleted(tasks[index].Numeration);
                 PlayCompletionSound();
                 tasks[index].TaskStatus = "Completed";
-                await Task.Delay(delayValue);
-                if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
             }
 
             ClearCrossOut(index);
@@ -395,6 +393,8 @@ namespace WPF_Task_Manager
             taskObjects[index].Item2.Opacity = 0.6;
 
             ScrollViewerScaling();
+            await Task.Delay(delayValue);
+            if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
         }
 
         private async void MarkTaskAsPending(int index)
@@ -504,7 +504,7 @@ namespace WPF_Task_Manager
                     if (taskObject.Item2.Text is string contentText)
                     {
                         string cleanedText = contentText.Replace("\n", "");
-                        if (taskObject.Item2.Text != cleanedText) taskObject.Item2.Text = CheckTextLength(cleanedText);
+                        taskObject.Item2.Text = CheckTextLength(cleanedText);
                     }
 
                     double top = GetTaskTopPosition(i) - topCorrection;
@@ -534,8 +534,8 @@ namespace WPF_Task_Manager
                 }
             }
 
-            if (taskStackPanel.Height != allTasksHeight && allTasksHeight > taskScrollViewer.Height) taskStackPanel.Height = allTasksHeight;
-            else if (taskStackPanel.Height != taskScrollViewer.Height) taskStackPanel.Height = taskScrollViewer.Height;
+            if (allTasksHeight > taskScrollViewer.Height) taskStackPanel.Height = allTasksHeight;
+            else taskStackPanel.Height = taskScrollViewer.Height;
         }
 
         // The main function that adds a task

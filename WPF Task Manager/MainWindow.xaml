@@ -71,7 +71,7 @@
                     <Grid x:Name="PanelsContainer" Visibility="Visible">
                         <local:TaskSectionPanel x:Name="taskSectionPanel"/>
                         <local:ProfilePanel x:Name="profilePanel"/>
-                        <local:MyDayTaskPanel x:Name="myDayTaskPanel"/>
+                        <local:TasksPanel x:Name="myDayTaskPanel"/>
                     </Grid>
                 </Border>
             </DockPanel>

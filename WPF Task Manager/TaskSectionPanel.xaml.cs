@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 namespace WPF_Task_Manager
 {
@@ -32,29 +33,44 @@ namespace WPF_Task_Manager
             List<DBOperations> allTasks = await DBOperations.GetTasksByIdAsync("Tasks", 0);
 
             var taskCounts = allTasks.GroupBy(task => task.TaskType ?? string.Empty)
-        .Where(group => group.Key == "MyDay" || group.Key == "Important" || group.Key == "Groceries" || group.Key == "Tasks")
-        .ToDictionary(group => group.Key, group => group.Count(task => task.TaskStatus == "Pending"));
+                .Where(group => group.Key == "MyDay" || group.Key == "Important" || group.Key == "Groceries" || group.Key == "Tasks")
+                .ToDictionary(group => group.Key, group => group.Count(task => task.TaskStatus == "Pending"));
 
-            // Обновление UI
-            MyDayCountBorder.Visibility = taskCounts.TryGetValue("MyDay", out int myDayCount) && myDayCount > 0
-                ? Visibility.Visible : Visibility.Collapsed;
+            UpdateUI(taskCounts.TryGetValue("MyDay", out int myDayCount) ? myDayCount : 0, MyDayCountBorder, MyDayCount, -45);
 
-            MyDayCount.Text = myDayCount > 0 ? myDayCount.ToString() : "";
+            UpdateUI(taskCounts.TryGetValue("Important", out int importantCount) ? importantCount : 0, ImportantCountBorder, ImportantCount, -45);
 
-            ImportantCountBorder.Visibility = taskCounts.TryGetValue("Important", out int importantCount) && importantCount > 0
-                ? Visibility.Visible : Visibility.Collapsed;
+            UpdateUI(taskCounts.TryGetValue("Groceries", out int groceriesCount) ? groceriesCount : 0, GroceriesCountBorder, GroceriesCount, -45);
 
-            ImportantCount.Text = importantCount > 0 ? importantCount.ToString() : "";
-
-            GroceriesCountBorder.Visibility = taskCounts.TryGetValue("Groceries", out int groceriesCount) && groceriesCount > 0
-                ? Visibility.Visible : Visibility.Collapsed;
-
-            GroceriesCount.Text = groceriesCount > 0 ? groceriesCount.ToString() : "";
-
-            // Общий счет задач
             int allTasksCount = taskCounts.Values.Sum();
-            TasksCountBorder.Visibility = allTasksCount > 0 ? Visibility.Visible : Visibility.Collapsed;
-            TasksCount.Text = allTasksCount > 0 ? allTasksCount.ToString() : "";
+            UpdateUI(allTasksCount, TasksCountBorder, TasksCount, -65);
+        }
+
+        private void UpdateUI(int count, Border countBorder, TextBlock countTextBlock, int top)
+        {
+            countBorder.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            countTextBlock.Text = count > 0 ? count.ToString() : "";
+
+            if (count > 9 && count < 999)
+            {
+                countBorder.Width = 25;
+                countBorder.CornerRadius = new CornerRadius(9);
+                countTextBlock.Margin = new Thickness(272, top, 0, 0);
+            }
+            else if (count > 999)
+            {
+                countBorder.Width = 45;
+                countBorder.CornerRadius = new CornerRadius(9);
+                countTextBlock.Margin = new Thickness(269, top, 0, 0);
+                countTextBlock.Text = "+999";
+                countTextBlock.Width = 35;
+            }
+            else
+            {
+                countBorder.Width = 20;
+                countBorder.CornerRadius = new CornerRadius(20);
+                countTextBlock.Margin = new Thickness(278, top, 0, 0);
+            }
         }
 
         public void TaskSectionPanelResize(double actualWidth, double actualHeight)
@@ -85,7 +101,7 @@ namespace WPF_Task_Manager
 
         private static void UpdateSectionUI(string colorTheme, string header, string imagePrefix, string content, string calendarImagePath, double calendarWidth, double calendarHeight, Thickness calendarMargin)
         {
-            MyDayTaskPanel? md = MyDayTaskPanel.MainWindowInstance?.myDayTaskPanel;
+            TasksPanel? md = TasksPanel.MainWindowInstance?.myDayTaskPanel;
             if (md != null)
             {
                 try
