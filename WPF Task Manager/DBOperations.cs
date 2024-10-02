@@ -219,7 +219,7 @@ namespace WPF_Task_Manager
                 {
                     string updateQuery = "DELETE FROM tasks WHERE numeration = @numeration";
 
-                    await using MySqlCommand cmd = new(updateQuery, myConnect);
+                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
                     {
                         cmd.Parameters.AddWithValue("@numeration", numeration);
                         await cmd.ExecuteNonQueryAsync();
@@ -236,6 +236,43 @@ namespace WPF_Task_Manager
             {
                 Debug.WriteLine("ERROR: " + ex.Message);
             }
+        }
+
+        public static async Task<Byte> GetCompletedTaskValue()
+        {
+            MySqlConnection connectStatus = GetConnection();
+            byte count = 0;
+            try
+            {
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                {
+                    string query = "SELECT completedTasks FROM users WHERE id = @id";
+
+                    await using MySqlCommand cmd = new(query, connectStatus);
+                    {
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
+
+                        await using DbDataReader dbDataReader = await cmd.ExecuteReaderAsync();
+                        {
+                            if (await dbDataReader.ReadAsync())
+                            {
+                                count = (byte)dbDataReader.GetInt32("completedTasks");
+                            }
+                        }
+                    }
+
+                    Debug.WriteLine("VALUE OBTAINED SUCCESSFULLY.");
+                }
+                else
+                {
+                    Debug.WriteLine("FAILED TO CONNECT TO DATABASE.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
+            return count;
         }
     }
 }

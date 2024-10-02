@@ -46,7 +46,7 @@ namespace WPF_Task_Manager
             UpdateUI(allTasksCount, TasksCountBorder, TasksCount, -65);
         }
 
-        private void UpdateUI(int count, Border countBorder, TextBlock countTextBlock, int top)
+        private static void UpdateUI(int count, Border countBorder, TextBlock countTextBlock, int top)
         {
             countBorder.Visibility = count > 0 ? Visibility.Visible : Visibility.Collapsed;
             countTextBlock.Text = count > 0 ? count.ToString() : "";

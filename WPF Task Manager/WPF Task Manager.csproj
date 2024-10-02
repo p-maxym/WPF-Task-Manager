@@ -43,6 +43,7 @@
     <None Remove="Resource\grey-circle.svg" />
     <None Remove="Resource\important-icon.png" />
     <None Remove="Resource\list-icon.svg" />
+    <None Remove="Resource\man-round1.png" />
     <None Remove="Resource\management-todo-check.png" />
     <None Remove="Resource\myday-calendar.png" />
     <None Remove="Resource\plus-4fb5dc.svg" />
@@ -61,6 +62,8 @@
     <None Remove="Resource\star.png" />
     <None Remove="Resource\supermarket-shopping.png" />
     <None Remove="Resource\trace.svg" />
+    <None Remove="Resource\Untitled-1-round.png" />
+    <None Remove="Resource\Untitled-1.jpg" />
     <None Remove="Resource\wait-time.svg" />
     <None Remove="Resource\weather-icon.png" />
     <None Remove="Resource\weather-icon.svg" />
@@ -148,6 +151,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\trace.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resource\Untitled-1-round.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resource\wait-time.svg">

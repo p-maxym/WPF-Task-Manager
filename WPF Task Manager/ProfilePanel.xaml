@@ -7,9 +7,19 @@
              mc:Ignorable="d"
              >
     <Canvas>
-    <Border Width="350" Height="160" Background="#171717"
+        <Border Width="350" Height="160" Background="#171717"
                 CornerRadius="15" Margin="21,12,647,531" x:Name="ProfilePanelBorder">
+            <Canvas>
+                <Image Source="Resource/Untitled-1-round.png" Width="120" Height="120" Canvas.Left="10" Canvas.Top="20" HorizontalAlignment="Left" VerticalAlignment="Top" />
 
-    </Border>
+                <Border Background="#343434" Width="175" Height="30" CornerRadius="15" Canvas.Left="135" Canvas.Top="97" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Completed today: " FontSize="16" FontWeight="Bold" Foreground="White" Canvas.Left="141" Canvas.Top="100" HorizontalAlignment="Center" VerticalAlignment="Top" />
+                <Border x:Name="completedTasksBorder" Width="21" Height="20" CornerRadius="10" Background="#9FA1A2" Visibility="Visible" IsHitTestVisible="False" Canvas.Left="282" Canvas.Top="102" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock x:Name="completedCount" Foreground="Black" Text="0" FontSize="17" Width="9" Height="20" FontFamily="Impact" FontWeight="Light" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.535,0.505"/>
+                </Border>
+
+                <TextBlock x:Name="profileName" Text="xD " FontSize="45" FontWeight="Bold" Foreground="White" Canvas.Left="141" Canvas.Top="20" HorizontalAlignment="Center" VerticalAlignment="Top" IsHitTestVisible="False"/>
+            </Canvas>
+        </Border>
     </Canvas>
 </UserControl>
