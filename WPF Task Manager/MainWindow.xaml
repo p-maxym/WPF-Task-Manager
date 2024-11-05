@@ -47,7 +47,7 @@
                                 <Label Content="✕" HorizontalAlignment="Center" Margin="0,3,0,0"  FontSize="14" FontFamily="Arial" Foreground="White"/>
                             </Border>
                             <Border x:Name="maxMinButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="Header_PreviewMouseDown" MouseLeave="Header_MouseLeave"  MouseEnter="Header_MouseEnter" PreviewMouseUp="Header_PreviewMouseUp">
-                                <Image Name="labelMaxmin" Source="Resource/sampling_mathod.png" HorizontalAlignment="Center" Margin="0,-1,0,0"/>
+                                <Image Name="labelMaxmin" HorizontalAlignment="Center" Margin="0,-1,0,0"/>
                             </Border>
                             <Border x:Name="rollButton" Width="45" Height="29" Background="#222222" PreviewMouseDown="Header_PreviewMouseDown" MouseLeave="Header_MouseLeave"  MouseEnter="Header_MouseEnter" PreviewMouseUp="Header_PreviewMouseUp">
                                 <Label Content="&#8211;" HorizontalAlignment="Center" Margin="0,-1,0,0"  FontSize="16" Foreground="White" />

@@ -29,7 +29,7 @@ namespace WPF_Task_Manager
             if (sender is Border border) border.Background = new BrushConverter().ConvertFromString("#1B1B1B") as Brush;
         }
 
-        public void MarkTaskOption(bool status)
+        public void MarkTaskOption(bool status, bool importantStatus)
         {
             if (status)
             {
@@ -41,6 +41,9 @@ namespace WPF_Task_Manager
                 setStatusImage.Source = new Uri("pack://application:,,,/Resource/circle-check.svg");
                 setStatusLabel.Text = "Mark as completed";
             }
+
+            if (importantStatus) setImportantLabel.Text = "Mark as important";
+            else setImportantLabel.Text = "Mark as not important";
         }
     }
 }

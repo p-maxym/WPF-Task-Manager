@@ -19,6 +19,7 @@ namespace WPF_Task_Manager
         public DateTime DueDate { get; set; }
         public string? TaskStatus { get; set; }
         public string? TaskType { get; set; }
+        public string? LastTaskType { get; set; }
         public int Important { get; set; }
         public int Numeration { get; set; }
 
@@ -74,7 +75,7 @@ namespace WPF_Task_Manager
             {
                 if (connectStatus != null && connectStatus.State == ConnectionState.Open)
                 {
-                    string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType, Important) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType, @Important)";
+                    string insertQuery = "INSERT INTO tasks (id, TaskDescription, DueDate, TaskStatus, TaskType, LastTaskType, Important) VALUES(@id, @TaskDescription, @DueDate, @TaskStatus, @TaskType, @LastTaskType, @Important)";
 
                     await using MySqlCommand cmd = new(insertQuery, connectStatus);
                     {
@@ -83,6 +84,7 @@ namespace WPF_Task_Manager
                         cmd.Parameters.AddWithValue("@DueDate", dueDate);
                         cmd.Parameters.AddWithValue("@TaskStatus", taskStatus);
                         cmd.Parameters.AddWithValue("@TaskType", taskType);
+                        cmd.Parameters.AddWithValue("@LastTaskType", taskType);
                         cmd.Parameters.AddWithValue("@Important", importantValue);
 
                         int rowsAffected = await cmd.ExecuteNonQueryAsync();
@@ -129,6 +131,7 @@ namespace WPF_Task_Manager
                                     DueDate = dbDataReader.GetDateTime("DueDate"),
                                     TaskStatus = dbDataReader.GetString("TaskStatus"),
                                     TaskType = dbDataReader.GetString("TaskType"),
+                                    LastTaskType = dbDataReader.GetString("LastTaskType"),
                                     Important = dbDataReader.GetInt16("Important"),
                                     Numeration = dbDataReader.GetInt32("Numeration")
                                 };
@@ -273,6 +276,68 @@ namespace WPF_Task_Manager
                 Debug.WriteLine("ERROR: " + ex.Message);
             }
             return count;
+        }
+
+        public static async Task MarkTaskAsImportant(int numeration)
+        {
+            MySqlConnection connectStatus = GetConnection();
+
+            try
+            {
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                {
+                    string updateQuery = "UPDATE tasks SET Important = @Important, TaskType = @TaskType WHERE numeration = @numeration AND id = @id";
+
+                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
+                    {
+                        cmd.Parameters.AddWithValue("@Important", 1);
+                        cmd.Parameters.AddWithValue("@TaskType", "Important");
+                        cmd.Parameters.AddWithValue("@numeration", numeration);
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
+        }
+
+        public static async Task MarkTaskAsNotImportant(int numeration, string lastTaskType)
+        {
+            MySqlConnection connectStatus = GetConnection();
+
+            try
+            {
+                if (connectStatus != null && connectStatus.State == ConnectionState.Open)
+                {
+                    string updateQuery = "UPDATE tasks SET Important = @Important, TaskType = @TaskType WHERE numeration = @numeration AND id = @id";
+
+                    await using MySqlCommand cmd = new(updateQuery, connectStatus);
+                    {
+                        cmd.Parameters.AddWithValue("@Important", 0);
+                        cmd.Parameters.AddWithValue("@TaskType", lastTaskType);
+                        cmd.Parameters.AddWithValue("@numeration", numeration);
+                        cmd.Parameters.AddWithValue("@id", Autorization._Id);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+                else
+                {
+                    Debug.WriteLine("FAILED CONNECT TO DATABASE.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("ERROR: " + ex.Message);
+            }
         }
     }
 }

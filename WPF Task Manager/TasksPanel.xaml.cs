@@ -25,7 +25,7 @@ namespace WPF_Task_Manager
         double _mainWindowActualWidth, _mainWindowActualHeight;
         readonly double minWindowValue = 380;
         readonly int delayValue = 200;
-        readonly SoundPlayer _soundPlayer;
+        readonly SoundPlayer? _soundPlayer;
         int _Numeration;
         private string _mainColorTheme = "#5271FF";
         public string _circleImagePath = "pack://application:,,,/Resource/circleimage-5271ff.svg";
@@ -47,13 +47,24 @@ namespace WPF_Task_Manager
         public TasksPanel()
         {
             InitializeComponent();
-            _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
-            _soundPlayer.LoadAsync(); // Downloading audio in the background
-
-            TaskGeneration(currentSection, 0);
-            LabelDataSet();
-
             if (Application.Current.MainWindow is MainWindow mainWindow) _mainWindow = mainWindow;
+            try
+            {
+                _soundPlayer = new SoundPlayer("Resource/servant-bell-ring.wav");
+                _soundPlayer.LoadAsync(); // Downloading audio in the background
+                TaskGeneration(currentSection, 0);
+                LabelDataSet();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                MessageBox.Show("Something went wrong!", "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                Thread.Sleep(3000);
+
+                if (_mainWindow != null) _mainWindow.Close();
+                DBOperations.CloseDB();
+            }
         }
 
         public void UpdateSection(string mainColorTheme, string taskType, int importantValue)
@@ -273,8 +284,9 @@ namespace WPF_Task_Manager
 
                 // Open panel + animation
                 bool status = tasks[TaskSettingsIndex].TaskStatus == "Completed";
+                bool importantStatus = tasks[TaskSettingsIndex].Important == 0;
 
-                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings, status);
+                mainWindow.OpenTaskSettingsWindow(currentLeftPositionTaskSettings, currentTopPositionTaskSettings, status, importantStatus);
                 animation.Begin(mainWindow.taskSettingsControl);
 
                 // Add a scroll lock handler
@@ -285,10 +297,14 @@ namespace WPF_Task_Manager
                     _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown -= DeleteBorder_PreviewMouseDown;
                     _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkPending_PreviewMouseDown;
                     _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown -= TaskSettingsMarkCompleted_PreviewMouseDown;
+                    _mainWindow.taskSettingsControl.importantBorder.PreviewMouseDown -= TaskSettingsMarkImportant_PreviewMouseDown;
+                    _mainWindow.taskSettingsControl.importantBorder.PreviewMouseDown -= TaskSettingsMarkNotImportant_PreviewMouseDown;
 
                     _mainWindow.taskSettingsControl.deleteBorder.PreviewMouseDown += DeleteBorder_PreviewMouseDown;
                     if (status) _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkPending_PreviewMouseDown;
                     else _mainWindow.taskSettingsControl.markBorder.PreviewMouseDown += TaskSettingsMarkCompleted_PreviewMouseDown;
+                    if(importantStatus) _mainWindow.taskSettingsControl.importantBorder.PreviewMouseDown += TaskSettingsMarkImportant_PreviewMouseDown;
+                    else _mainWindow.taskSettingsControl.importantBorder.PreviewMouseDown += TaskSettingsMarkNotImportant_PreviewMouseDown;
                 }
             }
         }
@@ -366,6 +382,44 @@ namespace WPF_Task_Manager
                 {
                     _mainWindow.taskSettingsControl.Visibility = Visibility.Collapsed;
                     _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+                }
+            }
+        }
+
+        private async void TaskSettingsMarkImportant_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int index = tasks.FindIndex(t => t.Numeration == _Numeration);
+
+            if (index >= 0)
+            {
+                if (_mainWindow != null)
+                {
+                    await DBOperations.MarkTaskAsImportant(tasks[index].Numeration);
+                    _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+
+                    ResetTaskObjects();
+                    TaskGeneration(currentSection, importantStatus);
+                    await Task.Delay(delayValue);
+                    if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
+                }
+            }
+        }
+
+        private async void TaskSettingsMarkNotImportant_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            int index = tasks.FindIndex(t => t.Numeration == _Numeration);
+
+            if (index >= 0)
+            {
+                if (_mainWindow != null)
+                {
+                    await DBOperations.MarkTaskAsNotImportant(tasks[index].Numeration, tasks[index].LastTaskType);
+                    _mainWindow.myDayTaskPanel.taskScrollViewer.PreviewMouseWheel -= _mainWindow.myDayTaskPanel.ScrollViewer_PreviewMouseWheel;
+
+                    ResetTaskObjects();
+                    TaskGeneration(currentSection, importantStatus);
+                    await Task.Delay(delayValue);
+                    if (_mainWindow != null) await _mainWindow.taskSectionPanel.AllPendingTasksCount();
                 }
             }
         }

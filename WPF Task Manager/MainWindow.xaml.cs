@@ -102,11 +102,11 @@ namespace WPF_Task_Manager
         }
 
         
-        public void OpenTaskSettingsWindow(double left, double top, bool status)
+        public void OpenTaskSettingsWindow(double left, double top, bool status, bool importantStatus)
         {
             try
             {
-                taskSettingsControl.MarkTaskOption(status);
+                taskSettingsControl.MarkTaskOption(status, importantStatus);
                 taskSettingsControl.Visibility = Visibility.Visible;
                 taskSettingsControl.Margin = new Thickness(left + 100, top + 100, 0, 0);
             }
